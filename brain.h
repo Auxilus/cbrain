@@ -40,12 +40,12 @@ struct brain
 } brain;
 
 struct neuron* make_neuron(uint);
+struct brain* init_brain(int);
 void link_neuron(struct neuron*, struct neuron*, uint);
 void accum_neuron(struct neuron*, uint);
 void fire_neuron(struct neuron*, struct brain*);
 void update_neuron(struct neuron*, struct brain*);
 void update_all(struct brain*);
-struct brain* init_brain(int);
 
 int rand_int(int, int);
 int checkexist(uint, uint*, int);
