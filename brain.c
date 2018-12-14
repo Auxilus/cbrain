@@ -31,17 +31,17 @@ struct neuron* make_neuron(uint id)
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 	n->id = id;
 	n->lc = 0;
-	n->links = (uint*)malloc(sizeof(uint)*10);
+	n->lmax = 10;
+	n->links = (uint*)malloc(sizeof(uint) * n->lmax);
 	if (n->links == NULL) {
 		printf("Failed to allocate memory for links");
 		exit(1);
 	}
-	n->wts = (uint*)malloc(sizeof(uint)*10);
+	n->wts = (uint*)malloc(sizeof(uint) * n->lmax);
 	if (n->wts == NULL) {
 		printf("Failed to allocate memory for links");
 		exit(1);
 	}
-	n->lmax = 10;
 	n->thisstate = 0;
 	n->nextstate = 0;
 	return n;
@@ -51,9 +51,10 @@ void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 {
 	if (!(src->id == n->id)) {
 		if (src->lc >= src->lmax) {
+			src->lmax *= 2;
 			printf("reallocating memory...");
-			src->links = (uint*)realloc(src->links, sizeof(uint)*10);
-			src->wts = (uint*)realloc(src->wts, sizeof(uint)*10);
+			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
+			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
 			src->lmax += 10;
 		}
 		src->links[src->lc] = n->id;

@@ -1,0 +1,4 @@
+. Add multi-threaded neuron updater
+. Add free neuron function to delete neurons
+. Add unlink neuron function
+. Rework brain structure to include neurons added at runtime
