@@ -50,16 +50,15 @@ struct neuron* make_neuron(uint id)
 void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 {
 	if (!(src->id == n->id)) {
+		src->lc += 1;
 		if (src->lc >= src->lmax) {
-			src->lmax *= 2;
+			src->lmax = src->lmax * 2;
 			printf("reallocating memory...");
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
-			src->lmax += 10;
 		}
 		src->links[src->lc] = n->id;
 		src->wts[src->lc] = wt;
-		src->lc += 1;
 	}
 }
 
@@ -148,7 +147,7 @@ int main()
 	}
 	printf(" done\n");
 	while (a == 0) {
-		accum_neuron(b->neurons[rand_int(0, b->size - 1)], 20);
+		accum_neuron(b->neurons[b->neurons[rand_int(0, b->size - 1)]], 20);
 		update_all(b);
 	}
 	return 0;

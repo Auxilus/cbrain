@@ -19,7 +19,7 @@ SOFTWARE.
 */
 
 typedef unsigned int   uint;
-typedef unsigned long  ulong;
+
 struct neuron
 {
 	uint id;
