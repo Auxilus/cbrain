@@ -39,7 +39,7 @@ struct neuron* make_neuron(uint id)
 	}
 	n->wts = (uint*)malloc(sizeof(uint) * n->lmax);
 	if (n->wts == NULL) {
-		printf("Failed to allocate memory for links");
+		printf("Failed to allocate memory for weights");
 		exit(1);
 	}
 	n->thisstate = 0;
