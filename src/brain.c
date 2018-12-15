@@ -133,7 +133,7 @@ int main()
 {
 	srand(time(0));
 	printf("Creating brain...\t");
-	struct brain* b = init_brain(1000);
+	struct brain* b = init_brain(2);
 	printf(" done\n");
 	int a = 0;
 	printf("Making random connections...\t");
@@ -147,7 +147,7 @@ int main()
 	}
 	printf(" done\n");
 	while (a == 0) {
-		accum_neuron(b->neurons[b->neurons[rand_int(0, b->size - 1)]], 20);
+		accum_neuron(b->neurons[rand_int(0, b->size - 1)], 20);
 		update_all(b);
 	}
 	return 0;
