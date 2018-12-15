@@ -36,6 +36,8 @@ struct neuron
 struct brain
 {
 	struct neuron** neurons;
+	
+	uint nmax;
 	uint size;
 } brain;
 

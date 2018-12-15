@@ -1,10 +1,10 @@
-C_SOURCES = $(wildcard *.c)
-HEADERS   = $(wildcard *.h)
+C_SOURCES = $(wildcard src/*.c)
+HEADERS   = $(wildcard src/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
 all: brain
 
-brain: brain.c ${HEADERS}
+brain: src/brain.c ${HEADERS}
 	gcc -Wall $< -o $@
 
 clean:

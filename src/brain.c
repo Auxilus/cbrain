@@ -99,12 +99,13 @@ void fire_neuron(struct neuron* n, struct brain* b)
 struct brain* init_brain(int s)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
-	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * s);
+	b->nmax = s;
+	b->size = s;
+	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * b->nmax);
 	for (int i = 0; i < s; i++) {
 		struct neuron* n = make_neuron(i);
 		b->neurons[i] = n;
 	}
-	b->size = s;
 	return b;
 }
 
@@ -133,7 +134,7 @@ int main()
 {
 	srand(time(0));
 	printf("Creating brain...\t");
-	struct brain* b = init_brain(10000000);
+	struct brain* b = init_brain(1000);
 	printf(" done\n");
 	int a = 0;
 	printf("Making random connections...\t");
