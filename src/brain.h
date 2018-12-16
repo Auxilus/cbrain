@@ -38,7 +38,6 @@ struct brain
 	struct neuron** neurons;
 	
 	uint nmax;
-	uint size;
 } brain;
 
 struct neuron* make_neuron(uint);
