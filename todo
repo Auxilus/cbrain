@@ -1,6 +1,6 @@
-. Add multi-threaded neuron updater
-. Add free neuron function to delete neurons
-. Add unlink neuron function
-. Rework brain structure to include neurons added at runtime
-. Add sim sharing support so that multiple devices can 
+- Add multi-threaded neuron updater
+- Add free neuron function to delete neurons
+- Add unlink neuron function
+- Rework brain structure to include neurons added at runtime
+- Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
