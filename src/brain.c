@@ -24,6 +24,7 @@ SOFTWARE.
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 
 #define THRESHOLD 10
@@ -54,6 +55,15 @@ void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 		src->links[src->lc] = n->id;
 		src->wts[src->lc] = wt;
 	}
+}
+
+void link_random_neuron(struct neuron* n, struct brain* b)
+{
+	int des = rand_int(0, b->nmax - 1);
+	if (checkexist(des, n->links, n->lc) == -1) {
+		link_neuron(n, b->neurons[des], rand_int(1, 10));
+	}
+
 }
 
 void unlink_neuron(struct neuron* src, struct neuron* n)
@@ -88,7 +98,7 @@ void update_neuron(struct neuron* n, struct brain* b)
 
 void update_all(struct brain* b)
 {
-	for (int i = 0; i < b->nmax; i++) {
+	for (int i = 0; i < b->nc; i++) {
 		update_neuron(b->neurons[i], b);
 	}
 }
@@ -108,7 +118,8 @@ void fire_neuron(struct neuron* n, struct brain* b)
 struct brain* init_brain(int s)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
-	b->nmax = s;
+	b->nc = s;
+	b->nmax = b->nc;
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * b->nmax);
 	for (int i = 0; i < s; i++) {
 		struct neuron* n = make_neuron(i);
@@ -127,22 +138,19 @@ int main()
 {
 	srand(time(0));
 	printf("Creating brain...\t");
-	struct brain* b = init_brain(2);
+	struct brain* b = init_brain(100);
 	printf(" done\n");
 	int a = 0;
 	printf("Making random connections...\t");
 	for (int i = 0; i < 100;i++) {
-		int src = rand_int(0, b->nmax - 1);
-		int des = rand_int(0, b->nmax - 1);
-		if (checkexist(des, b->neurons[src]->links, b->neurons[src]->lc) == -1) {
-			link_neuron(b->neurons[src], b->neurons[des], rand_int(1
-, 10));
-		}
+		int src = rand_int(0, b->nc - 1);
+		link_random_neuron(b->neurons[src], b);
 	}
 	printf(" done\n");
 	while (a == 0) {
-		accum_neuron(b->neurons[rand_int(0, b->nmax - 1)], 20);
+		accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 20);
 		update_all(b);
+		sleep(1);
 	}
 	return 0;
 }
