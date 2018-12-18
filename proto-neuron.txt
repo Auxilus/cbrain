@@ -1,0 +1,32 @@
+# base data for sim-sharing:
+	brain
+	neuron range to be processed
+
+- control device:
+	init sharing
+	generate brain
+	make connections
+	listen for peers to connect
+
+	divide the neurons wrt number of peers connected to control device
+	
+- balance load:
+	halt the sim if insufficient peers are connected
+	re-calculate neuron ranges if new peer is connected
+
+- threading:
+	main: keep track of neurons
+	load-balancer: re-calculation of ranges
+	network: keep track of remote peers and process data to be used over the connections
+
+network struct:
+	peers  [Array] remote peers
+	ranges [Array] nneuron id ranges for respective peers
+
+	In-stream:
+		new peer connection data
+		neuron firings
+
+	Out-stream:
+		neuron data
+		brain data

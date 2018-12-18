@@ -150,7 +150,7 @@ int main()
 	while (a == 0) {
 		accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 20);
 		update_all(b);
-		sleep(1);
+		sleep(0.5);
 	}
 	return 0;
 }
