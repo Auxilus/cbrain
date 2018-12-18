@@ -21,11 +21,13 @@ SOFTWARE.
 */
 
 #include "brain.h"
+#include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #define THRESHOLD 10
+
 struct neuron* make_neuron(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
@@ -44,7 +46,7 @@ void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 	if (!(src->id == n->id)) {
 		src->lc += 1;
 		if (src->lc >= src->lmax) {
-			src->lmax = src->lmax * 2;
+			src->lmax *= 2;
 			printf("reallocating memory...");
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
@@ -99,21 +101,6 @@ struct brain* init_brain(int s)
 	return b;
 }
 
-int rand_int(int x, int y)
-{
-	int num;
-	num = rand() % (y + 1 - x) + x;
-	return num;
-}
-
-int checkexist(uint val, uint* arr, int size) {
-	for (int i = 0; i < size; i++) {
-		if (arr[i] == val) {
-			return 1;
-		}
-	}
-	return 0;
-}
 
 void show_stat(struct neuron* n)
 {

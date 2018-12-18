@@ -18,33 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-typedef unsigned int   uint;
+typedef unsigned int uint;
 
-struct neuron
-{
-	uint id;
-	uint *links;
-	uint *wts;
-	uint lc;
-	uint lmax;
-
-	uint thisstate;
-	uint nextstate;
-
-} neuron;
-
-struct brain
-{
-	struct neuron** neurons;
-	
-	uint nmax;
-} brain;
-
-struct neuron* make_neuron(uint);
-struct brain* init_brain(int);
-void link_neuron(struct neuron*, struct neuron*, uint);
-void accum_neuron(struct neuron*, uint);
-void fire_neuron(struct neuron*, struct brain*);
-void update_neuron(struct neuron*, struct brain*);
-void update_all(struct brain*);
-void show_stat(struct neuron*);
+int checkexist(uint, uint*, int);
+int rand_int(int, int);

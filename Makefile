@@ -4,8 +4,12 @@ OBJ = ${C_SOURCES:.c=.o}
 
 all: brain
 
-brain: src/brain.c ${HEADERS}
-	gcc -Wall $< -o $@
+%.o: %.c
+	gcc -Wall -c $< -o $@
+
+brain: ${OBJ}
+	gcc -Wall $^ -o $@
 
 clean:
 	rm brain
+	rm src/*.o
