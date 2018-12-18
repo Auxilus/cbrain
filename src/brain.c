@@ -56,6 +56,22 @@ void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 	}
 }
 
+void unlink_neuron(struct neuron* src, struct neuron* n)
+{
+	int pos;
+	pos = checkexist(n->id, src->links, (int)src->lc);
+	if (!(pos == -1)) {
+		if (pos < src->lc) {
+			src->links[pos] = src->links[pos+1];
+			src->wts[pos] = src->wts[pos+1];
+			src->lc -= 1;
+		}
+		else {
+			src->lc -= 1;
+		}
+	}
+}
+
 void accum_neuron(struct neuron* n, uint wt)
 {
 	n->nextstate += wt;
@@ -118,7 +134,7 @@ int main()
 	for (int i = 0; i < 100;i++) {
 		int src = rand_int(0, b->nmax - 1);
 		int des = rand_int(0, b->nmax - 1);
-		if (checkexist(des, b->neurons[src]->links, b->neurons[src]->lc) == 0) {
+		if (checkexist(des, b->neurons[src]->links, b->neurons[src]->lc) == -1) {
 			link_neuron(b->neurons[src], b->neurons[des], rand_int(1
 , 10));
 		}

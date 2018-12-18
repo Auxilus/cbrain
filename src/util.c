@@ -11,8 +11,8 @@ int rand_int(int x, int y)
 int checkexist(uint val, uint* arr, int size) {
 	for (int i = 0; i < size; i++) {
 		if (arr[i] == val) {
-			return 1;
+			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
