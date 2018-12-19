@@ -26,6 +26,7 @@ SOFTWARE.
 #include <unistd.h>
 #include <time.h>
 #include <pthread.h>
+#include <SDL2/SDL.h>
 
 typedef unsigned int uint;
 
@@ -65,6 +66,12 @@ struct thread_bank
 	uint tmax;
 } thread_bank;
 
+struct ngraph
+{
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+} ngraph;
+
 struct brain* brain_init(int);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
@@ -83,5 +90,9 @@ void*		thread_func(void*);
 
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
+
+struct ngraph* graphics_init(void);
+void graphics_quit(struct ngraph*);
+void* graphics_event_monitor(void*);
 
 #endif

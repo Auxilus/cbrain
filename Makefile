@@ -5,10 +5,10 @@ OBJ = ${C_SOURCES:.c=.o}
 all: cbrain
 
 %.o: %.c
-	gcc -Wall -c $< -o $@ -lpthread
+	gcc -Wall -c $< -o $@
 
 cbrain: ${OBJ}
-	gcc -Wall $^ -o $@ -lpthread
+	gcc -Wall $^ -o $@ -lpthread -lSDL2
 
 clean:
 	rm cbrain

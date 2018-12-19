@@ -63,7 +63,7 @@ void *thread_func(void* args)
 	uint end   = ((struct thread_args*)args)->e;
 	struct brain* b = ((struct thread_args*)args)->b;
 	for (;;) {
-		int fired = neuron_update_range(start, end, b);
+		neuron_update_range(start, end, b);
 		sleep(1);
 	}
 }
