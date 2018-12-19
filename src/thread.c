@@ -53,5 +53,8 @@ void *thread_func(void* args)
 	uint start = ((struct thread_args*)args)->s;
 	uint end   = ((struct thread_args*)args)->e;
 	struct brain* b = ((struct thread_args*)args)->b;
-	int fired = update_range(start, end, b);
+	for (;;) {
+		int fired = update_range(start, end, b);
+		sleep(1);
+	}
 }

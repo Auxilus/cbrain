@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "header.h"
 
-#define THRESHOLD 10
+#define THRESHOLD 5
 
 struct neuron* make_neuron(uint id)
 {
@@ -56,7 +56,7 @@ void link_random_neuron(struct neuron* n, struct brain* b)
 {
 	int des = rand_int(0, b->nmax - 1);
 	if (checkexist(des, n->links, n->lc) == -1) {
-		link_neuron(n, b->neurons[des], rand_int(1, 10));
+		link_neuron(n, b->neurons[des], rand_int(10, 30));
 	}
 
 }
@@ -141,18 +141,17 @@ int main()
 {
 	srand(time(0));
 	struct brain* b = init_brain(100);
-	struct nthread* nt = thread_struct_new(0, 49);
-	int ret = thread_create(nt, b);
+	struct nthread* nt1 = thread_struct_new(0, 49);
+	struct nthread* nt2 = thread_struct_new(50, 99);
+	accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 10);
+	thread_create(nt1, b);
+	thread_create(nt2, b);
 
 	for (int i = 0; i < 100;i++) {
 		int src = rand_int(0, b->nc - 1);
 		link_random_neuron(b->neurons[src], b);
 	}
-	pthread_join(nt->tid, NULL);
-	for (;;) {
-		accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 20);
-		update_range(0, b->nc -1, b);
-		sleep(1);
-	}
+	pthread_join(nt1->tid, NULL);
+	pthread_join(nt2->tid, NULL);
 	return 0;
 }
