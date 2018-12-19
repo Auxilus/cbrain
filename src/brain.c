@@ -82,20 +82,28 @@ void accum_neuron(struct neuron* n, uint wt)
 	n->nextstate += wt;
 }
 
-void update_neuron(struct neuron* n, struct brain* b)
+int update_neuron(struct neuron* n, struct brain* b)
 {
+	int fired = 0;
 	if (n->thisstate >= THRESHOLD) {
 		fire_neuron(n, b);
+		fired = 1;
 	}
 	n->thisstate += n->nextstate;
 	n->nextstate = 0;
+	return fired;
 }
 
-void update_all(struct brain* b)
+int update_range(uint s, uint e, struct brain* b)
 {
-	for (int i = 0; i < b->nc; i++) {
-		update_neuron(b->neurons[i], b);
+	int nf = 0;
+	for (int i = s; i <= e; i++) {
+		int fired = update_neuron(b->neurons[i], b);
+		if (fired == 1) {
+			nf += 1;
+		}
 	}
+	return nf;
 }
 
 void fire_neuron(struct neuron* n, struct brain* b)
@@ -132,20 +140,19 @@ void show_stat(struct neuron* n)
 int main()
 {
 	srand(time(0));
-	printf("Creating brain...\t");
 	struct brain* b = init_brain(100);
-	printf(" done\n");
-	int a = 0;
-	printf("Making random connections...\t");
+	struct nthread* nt = thread_struct_new(0, 49);
+	int ret = thread_create(nt, b);
+
 	for (int i = 0; i < 100;i++) {
 		int src = rand_int(0, b->nc - 1);
 		link_random_neuron(b->neurons[src], b);
 	}
-	printf(" done\n");
-	while (a == 0) {
+	pthread_join(nt->tid, NULL);
+	for (;;) {
 		accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 20);
-		update_all(b);
-		sleep(0.5);
+		update_range(0, b->nc -1, b);
+		sleep(1);
 	}
 	return 0;
 }

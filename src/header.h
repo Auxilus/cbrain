@@ -22,8 +22,9 @@ SOFTWARE.
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <pthread.h>
 
-typedef unsigned int   uint;
+typedef unsigned int uint;
 
 struct neuron
 {
@@ -46,6 +47,14 @@ struct brain
 	uint nmax;
 } brain;
 
+struct nthread
+{
+	pthread_t tid;
+	uint s;
+	uint e;
+	uint status;
+} nthread;
+
 struct neuron* make_neuron(uint);
 struct brain* init_brain(int);
 void link_neuron(struct neuron*, struct neuron*, uint);
@@ -53,9 +62,13 @@ void link_random_neuron(struct neuron*, struct brain*);
 void unlink_neuron(struct neuron*, struct neuron*);
 void accum_neuron(struct neuron*, uint);
 void fire_neuron(struct neuron*, struct brain*);
-void update_neuron(struct neuron*, struct brain*);
-void update_all(struct brain*);
+int update_neuron(struct neuron*, struct brain*);
+int update_range(uint, uint, struct brain*);
 void show_stat(struct neuron*);
+
+struct nthread* thread_struct_new(uint, uint);
+int 		thread_create(struct nthread*, struct brain*);
+void*		thread_func(void*);
 
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
