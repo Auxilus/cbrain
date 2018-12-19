@@ -18,6 +18,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef CBRAIN_HEADER_H
+#define CBRAIN_HEADER_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -72,3 +75,5 @@ void*		thread_func(void*);
 
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
+
+#endif
