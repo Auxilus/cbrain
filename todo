@@ -5,8 +5,9 @@ TODO
 - Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
 - Add function to add extra neurons and link them with existing neurons
-- Add ditributor function to decide how many neurons each thread should process
+- Add load balancer to decide how many neurons each thread should process
   based on the b->nc and current cpu usage
+- Implement csv parser to load connectomes
 
 DONE
 - Add command line argument parser
