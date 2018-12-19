@@ -5,10 +5,10 @@ OBJ = ${C_SOURCES:.c=.o}
 all: brain
 
 %.o: %.c
-	gcc -Wall -c $< -o $@
+	gcc -Wall -c $< -o $@ -lpthread
 
 brain: ${OBJ}
-	gcc -Wall $^ -o $@
+	gcc -Wall $^ -o $@ -lpthread
 
 clean:
 	rm brain

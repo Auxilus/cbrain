@@ -137,10 +137,16 @@ void show_stat(struct neuron* n)
 	printf("ID: %d  thisstate: %d  nextstate: %d\n", n->id, n->thisstate, n->nextstate);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	srand(time(0));
-	struct brain* b = init_brain(100);
+	if (argc < 2) {
+		printf("Number of neurons required\n");
+		exit(1);
+	}
+	int neurons_no = atoi(argv[1]);
+	sleep(1);
+	struct brain* b = init_brain((uint)neurons_no);
 	struct nthread* nt1 = thread_struct_new(0, 49);
 	struct nthread* nt2 = thread_struct_new(50, 99);
 	accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 10);
