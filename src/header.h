@@ -58,6 +58,13 @@ struct nthread
 	uint status;
 } nthread;
 
+struct thread_bank
+{
+	struct nthread** threads;
+	uint tc;
+	uint tmax;
+} thread_bank;
+
 struct brain* brain_init(int);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
@@ -69,6 +76,7 @@ int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void show_stat(struct neuron*);
 
+struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
 int 		thread_create(struct nthread*, struct brain*);
 void*		thread_func(void*);

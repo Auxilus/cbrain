@@ -38,6 +38,15 @@ struct nthread* thread_struct_new(uint start, uint end)
 	return nt;
 }
 
+struct thread_bank* thread_bank_new(uint s)
+{
+	struct thread_bank* tb = (struct thread_bank*)malloc(sizeof(struct thread_bank));
+	tb->tmax = s;
+	tb->tc = 0;
+	tb->threads = (struct nthread**)malloc(sizeof(struct nthread) * tb->tmax);
+	return tb;
+}
+
 int thread_create(struct nthread* nt, struct brain* b)
 {
 	struct thread_args* ta = (struct thread_args*)malloc(sizeof(struct thread_args));

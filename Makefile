@@ -2,14 +2,14 @@ C_SOURCES = $(wildcard src/*.c)
 HEADERS   = $(wildcard src/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
-all: brain
+all: cbrain
 
 %.o: %.c
 	gcc -Wall -c $< -o $@ -lpthread
 
-brain: ${OBJ}
+cbrain: ${OBJ}
 	gcc -Wall $^ -o $@ -lpthread
 
 clean:
-	rm brain
+	rm cbrain
 	rm src/*.o
