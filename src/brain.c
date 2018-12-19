@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "header.h"
 
-#define THRESHOLD 5
+#define THRESHOLD 20
 
 struct neuron* neuron_init(uint id)
 {
@@ -52,13 +52,16 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 	}
 }
 
-void neuron_link_random(struct neuron* n, struct brain* b)
+void neuron_link_random(struct brain* b)
 {
-	int des = rand_int(0, b->nmax - 1);
-	if (checkexist(des, n->links, n->lc) == -1) {
-		neuron_link(n, b->neurons[des], rand_int(10, 30));
+	for (int i = 0; i < (int)b->nc; i++) {
+		for (int j = 0; j < 10; j++) {
+			uint id = (uint)rand_int(0, b->nc);
+			if (!(id == b->neurons[i]->id) && !(checkexist(id, b->neurons[i]->links, b->neurons[i]->lc))) {
+				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(1, 20));
+			}
+		}
 	}
-
 }
 
 void neuron_unlink(struct neuron* src, struct neuron* n)
@@ -85,8 +88,11 @@ void neuron_accum(struct neuron* n, uint wt)
 int neuron_update(struct neuron* n, struct brain* b)
 {
 	int fired = 0;
+	show_stat(n);
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
+		n->thisstate = 0;
+		n->nextstate = 0;
 		fired = 1;
 	}
 	n->thisstate += n->nextstate;
@@ -112,10 +118,8 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
-		n->thisstate = 0;
-		n->nextstate = 0;
 	}
-	printf("neuron %u fired\n", n->id);
+	//printf("neuron %u fired\n", n->id);
 }
 
 struct brain* brain_init(int s)

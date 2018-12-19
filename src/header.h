@@ -66,16 +66,10 @@ struct thread_bank
 	uint tmax;
 } thread_bank;
 
-struct ngraph
-{
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-} ngraph;
-
 struct brain* brain_init(int);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
-void neuron_link_random(struct neuron*, struct brain*);
+void neuron_link_random(struct brain*);
 void neuron_unlink(struct neuron*, struct neuron*);
 void neuron_accum(struct neuron*, uint);
 void neuron_fire(struct neuron*, struct brain*);
@@ -85,14 +79,10 @@ void show_stat(struct neuron*);
 
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
-int 		thread_create(struct nthread*, struct brain*);
+int 		thread_create(struct nthread*, struct brain*, uint);
 void*		thread_func(void*);
 
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
-
-struct ngraph* graphics_init(void);
-void graphics_quit(struct ngraph*);
-void* graphics_event_monitor(void*);
 
 #endif
