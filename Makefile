@@ -8,7 +8,7 @@ all: cbrain
 	gcc -Wall -c $< -o $@
 
 cbrain: ${OBJ}
-	gcc -Wall $^ -o $@ -lpthread -lSDL2
+	gcc -Wall $^ -o $@ -lpthread
 
 clean:
 	rm cbrain

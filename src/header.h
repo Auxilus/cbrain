@@ -26,7 +26,6 @@ SOFTWARE.
 #include <unistd.h>
 #include <time.h>
 #include <pthread.h>
-#include <SDL2/SDL.h>
 
 typedef unsigned int uint;
 
