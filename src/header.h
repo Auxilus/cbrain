@@ -45,10 +45,10 @@ struct neuron
 
 struct brain
 {
-	struct neuron** neurons;
-	
 	uint nc;
 	uint nmax;
+
+	struct neuron** neurons;
 } brain;
 
 struct nthread
@@ -61,9 +61,10 @@ struct nthread
 
 struct thread_bank
 {
-	struct nthread** threads;
 	uint tc;
 	uint tmax;
+
+	struct nthread** threads;
 } thread_bank;
 
 struct brain* brain_init(int);
@@ -76,12 +77,10 @@ void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void show_stat(struct neuron*);
-
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
-int 		thread_create(struct nthread*, struct brain*, uint);
-void*		thread_func(void*);
-
+int thread_create(struct nthread*, struct brain*, uint);
+void* thread_func(void*);
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
 
