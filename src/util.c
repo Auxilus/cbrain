@@ -1,5 +1,4 @@
-#include "util.h"
-#include <stdlib.h>
+#include "header.h"
 
 int rand_int(int x, int y)
 {
