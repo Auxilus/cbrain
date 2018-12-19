@@ -24,7 +24,7 @@ SOFTWARE.
 
 #define THRESHOLD 5
 
-struct neuron* make_neuron(uint id)
+struct neuron* neuron_init(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 	n->id = id;
@@ -37,7 +37,7 @@ struct neuron* make_neuron(uint id)
 	return n;
 }
 
-void link_neuron(struct neuron* src, struct neuron* n, uint wt)
+void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
 	if (!(src->id == n->id)) {
 		src->lc += 1;
@@ -52,16 +52,16 @@ void link_neuron(struct neuron* src, struct neuron* n, uint wt)
 	}
 }
 
-void link_random_neuron(struct neuron* n, struct brain* b)
+void neuron_link_random(struct neuron* n, struct brain* b)
 {
 	int des = rand_int(0, b->nmax - 1);
 	if (checkexist(des, n->links, n->lc) == -1) {
-		link_neuron(n, b->neurons[des], rand_int(10, 30));
+		neuron_link(n, b->neurons[des], rand_int(10, 30));
 	}
 
 }
 
-void unlink_neuron(struct neuron* src, struct neuron* n)
+void neuron_unlink(struct neuron* src, struct neuron* n)
 {
 	int pos;
 	pos = checkexist(n->id, src->links, (int)src->lc);
@@ -77,16 +77,16 @@ void unlink_neuron(struct neuron* src, struct neuron* n)
 	}
 }
 
-void accum_neuron(struct neuron* n, uint wt)
+void neuron_accum(struct neuron* n, uint wt)
 {
 	n->nextstate += wt;
 }
 
-int update_neuron(struct neuron* n, struct brain* b)
+int neuron_update(struct neuron* n, struct brain* b)
 {
 	int fired = 0;
 	if (n->thisstate >= THRESHOLD) {
-		fire_neuron(n, b);
+		neuron_fire(n, b);
 		fired = 1;
 	}
 	n->thisstate += n->nextstate;
@@ -94,11 +94,11 @@ int update_neuron(struct neuron* n, struct brain* b)
 	return fired;
 }
 
-int update_range(uint s, uint e, struct brain* b)
+int neuron_update_range(uint s, uint e, struct brain* b)
 {
 	int nf = 0;
 	for (int i = s; i <= e; i++) {
-		int fired = update_neuron(b->neurons[i], b);
+		int fired = neuron_update(b->neurons[i], b);
 		if (fired == 1) {
 			nf += 1;
 		}
@@ -106,7 +106,7 @@ int update_range(uint s, uint e, struct brain* b)
 	return nf;
 }
 
-void fire_neuron(struct neuron* n, struct brain* b)
+void neuron_fire(struct neuron* n, struct brain* b)
 {
 	int p;
 	p = n->lc;
@@ -118,14 +118,14 @@ void fire_neuron(struct neuron* n, struct brain* b)
 	printf("neuron %u fired\n", n->id);
 }
 
-struct brain* init_brain(int s)
+struct brain* brain_init(int s)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
 	b->nc = s;
 	b->nmax = b->nc;
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * b->nmax);
 	for (int i = 0; i < s; i++) {
-		struct neuron* n = make_neuron(i);
+		struct neuron* n = neuron_init(i);
 		b->neurons[i] = n;
 	}
 	return b;
@@ -146,16 +146,16 @@ int main(int argc, char* argv[])
 	}
 	int neurons_no = atoi(argv[1]);
 	sleep(1);
-	struct brain* b = init_brain((uint)neurons_no);
+	struct brain* b = brain_init((uint)neurons_no);
 	struct nthread* nt1 = thread_struct_new(0, 49);
 	struct nthread* nt2 = thread_struct_new(50, 99);
-	accum_neuron(b->neurons[rand_int(0, b->nc - 1)], 10);
+	neuron_accum(b->neurons[rand_int(0, b->nc - 1)], 10);
 	thread_create(nt1, b);
 	thread_create(nt2, b);
 
 	for (int i = 0; i < 100;i++) {
 		int src = rand_int(0, b->nc - 1);
-		link_random_neuron(b->neurons[src], b);
+		neuron_link_random(b->neurons[src], b);
 	}
 	pthread_join(nt1->tid, NULL);
 	pthread_join(nt2->tid, NULL);

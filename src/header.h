@@ -58,15 +58,15 @@ struct nthread
 	uint status;
 } nthread;
 
-struct neuron* make_neuron(uint);
-struct brain* init_brain(int);
-void link_neuron(struct neuron*, struct neuron*, uint);
-void link_random_neuron(struct neuron*, struct brain*);
-void unlink_neuron(struct neuron*, struct neuron*);
-void accum_neuron(struct neuron*, uint);
-void fire_neuron(struct neuron*, struct brain*);
-int update_neuron(struct neuron*, struct brain*);
-int update_range(uint, uint, struct brain*);
+struct brain* brain_init(int);
+struct neuron* neuron_init(uint);
+void neuron_link(struct neuron*, struct neuron*, uint);
+void neuron_link_random(struct neuron*, struct brain*);
+void neuron_unlink(struct neuron*, struct neuron*);
+void neuron_accum(struct neuron*, uint);
+void neuron_fire(struct neuron*, struct brain*);
+int  neuron_update(struct neuron*, struct brain*);
+int  neuron_update_range(uint, uint, struct brain*);
 void show_stat(struct neuron*);
 
 struct nthread* thread_struct_new(uint, uint);
