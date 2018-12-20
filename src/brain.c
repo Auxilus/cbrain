@@ -40,7 +40,7 @@ struct neuron* neuron_init(uint id)
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
 	if (!(src->id == n->id)) {
-		if ((src->lc + 1) >= src->lmax) {
+		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
 			printf("reallocating memory...");
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
@@ -56,8 +56,8 @@ void neuron_link_random(struct brain* b)
 {
 	for (int i = 0; i < (int)b->nc; i++) {
 		for (int j = 0; j < 10; j++) {
-			uint id = (uint)rand_int(0, b->nc);
-			if (!(id == b->neurons[i]->id) && !(checkexist(id, b->neurons[i]->links, b->neurons[i]->lc))) {
+			uint id = (uint)rand_int(0, b->nc - 1);
+			if (!(id == b->neurons[i]->id) && (checkexist(id, b->neurons[i]->links, b->neurons[i]->lc) == -1)) {
 				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(1, 20));
 			}
 		}
