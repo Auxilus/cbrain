@@ -119,7 +119,11 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	for (int i = 0; i < p; i++) {
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
 	}
-	//printf("neuron %u fired\n", n->id);
+	printf("neuron %u fired sending wt to [", n->id);
+	for (uint i = 0; i < n->lc; i++) {
+		printf("%u ", n->links[i]);
+	}
+	printf("]\n");
 }
 
 struct brain* brain_init(int s)
