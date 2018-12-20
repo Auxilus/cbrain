@@ -40,8 +40,7 @@ struct neuron* neuron_init(uint id)
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
 	if (!(src->id == n->id)) {
-		src->lc += 1;
-		if (src->lc >= src->lmax) {
+		if ((src->lc + 1) >= src->lmax) {
 			src->lmax *= 2;
 			printf("reallocating memory...");
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
@@ -49,6 +48,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 		}
 		src->links[src->lc] = n->id;
 		src->wts[src->lc] = wt;
+		src->lc += 1;
 	}
 }
 
