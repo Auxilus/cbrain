@@ -59,7 +59,7 @@ struct thread_bank {
 	uint tc;
 	uint tmax;
 
-a	struct nthread** threads;
+	struct nthread** threads;
 } thread_bank;
 
 struct brain* brain_init(int);
