@@ -29,8 +29,7 @@ SOFTWARE.
 
 typedef unsigned int uint;
 
-struct neuron
-{
+struct neuron {
 	uint id;
 	uint *links;
 	uint *wts;
@@ -42,28 +41,25 @@ struct neuron
 
 } neuron;
 
-struct brain
-{
+struct brain {
 	uint nc;
 	uint nmax;
 
 	struct neuron** neurons;
 } brain;
 
-struct nthread
-{
+struct nthread {
 	pthread_t tid;
 	uint s;
 	uint e;
 	uint status;
 } nthread;
 
-struct thread_bank
-{
+struct thread_bank {
 	uint tc;
 	uint tmax;
 
-	struct nthread** threads;
+a	struct nthread** threads;
 } thread_bank;
 
 struct brain* brain_init(int);

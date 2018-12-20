@@ -22,8 +22,7 @@ SOFTWARE.
 
 #include "header.h"
 
-struct thread_args
-{
+struct thread_args {
 	uint s;
 	uint e;
 	uint f;		/* -1:fire 0:update 1:accum*/
