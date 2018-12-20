@@ -85,4 +85,5 @@ void *thread_func(void* args)
 			sleep(1);	
 		}
 	}
+	return (void*)NULL;
 }

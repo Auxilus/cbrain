@@ -140,4 +140,3 @@ void show_stat(struct neuron* n)
 {
 	printf("ID: %d  thisstate: %d  nextstate: %d\n", n->id, n->thisstate, n->nextstate);
 }
-
