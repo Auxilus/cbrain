@@ -25,6 +25,7 @@ SOFTWARE.
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
 #include <pthread.h>
 
 typedef unsigned int uint;
@@ -38,7 +39,8 @@ struct neuron {
 
 	uint thisstate;
 	uint nextstate;
-
+	uint fired;	/*0:false 1:true*/
+	uint n_fired;
 } neuron;
 
 struct brain {
@@ -62,6 +64,7 @@ struct thread_bank {
 	struct nthread** threads;
 } thread_bank;
 
+/*	src/brain.c	*/
 struct brain* brain_init(int);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
@@ -72,10 +75,12 @@ void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void show_stat(struct neuron*);
+/*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
-int thread_create(struct nthread*, struct brain*, uint);
+int thread_create(struct nthread*, struct brain*, uint, uint);
 void* thread_func(void*);
+/*	src/util.c	*/
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
 

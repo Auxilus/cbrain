@@ -29,11 +29,13 @@ struct neuron* neuron_init(uint id)
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 	n->id = id;
 	n->lc = 0;
-	n->lmax = 10;
+	n->lmax = 100;
 	n->links = (uint*)malloc(sizeof(uint) * n->lmax);
 	n->wts = (uint*)malloc(sizeof(uint) * n->lmax);
 	n->thisstate = 0;
 	n->nextstate = 0;
+	n->fired     = 0;
+	n->n_fired   = 0;
 	return n;
 }
 
@@ -42,7 +44,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 	if (!(src->id == n->id)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
-			printf("reallocating memory...");
+			printf("reallocating memory... nid: %u\n", src->id);
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
 		}
@@ -55,7 +57,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 void neuron_link_random(struct brain* b)
 {
 	for (int i = 0; i < (int)b->nc; i++) {
-		for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < (b->nc / 2); j++) {
 			uint id = (uint)rand_int(0, b->nc - 1);
 			if (!(id == b->neurons[i]->id) && (checkexist(id, b->neurons[i]->links, b->neurons[i]->lc) == -1)) {
 				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(1, 20));
@@ -87,17 +89,18 @@ void neuron_accum(struct neuron* n, uint wt)
 
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	int fired = 0;
-	show_stat(n);
+	//show_stat(n);
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
 		n->thisstate = 0;
 		n->nextstate = 0;
-		fired = 1;
+		n->fired = 1;
+		n->n_fired += 1;
 	}
 	n->thisstate += n->nextstate;
 	n->nextstate = 0;
-	return fired;
+	n->fired     = 0;
+	return n->fired;
 }
 
 int neuron_update_range(uint s, uint e, struct brain* b)
@@ -119,11 +122,11 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	for (int i = 0; i < p; i++) {
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
 	}
-	printf("neuron %u fired sending wt to [", n->id);
+	/*printf("neuron %u fired sending wt to [", n->id);
 	for (uint i = 0; i < n->lc; i++) {
 		printf("%u ", n->links[i]);
 	}
-	printf("]\n");
+	printf("]\n");*/
 }
 
 struct brain* brain_init(int s)
