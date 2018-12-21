@@ -10,4 +10,5 @@ TODO
 DONE
 - Add command line argument parser
 - Add multi-threaded neuron updater
+- Add unlink_neuron function
 - Add link_random_neuron
