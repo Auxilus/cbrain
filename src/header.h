@@ -83,5 +83,6 @@ void* thread_func(void*);
 /*	src/util.c	*/
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
+void save_brain_state(struct brain*, char*);
 
 #endif
