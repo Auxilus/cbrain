@@ -5,7 +5,6 @@ TODO
 - Add function to add extra neurons and link them with existing neurons
 - Add load balancer to decide how many neurons each thread should process
   based on the b->nc and current cpu usage
-- Implement csv parser to load connectomes
 
 DONE
 - Add command line argument parser
