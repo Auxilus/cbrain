@@ -60,7 +60,7 @@ struct brain* gen_brain(char* filename)
 	int lines = file_num_lines(filename);
 	struct brain* brain = (struct brain*)malloc(sizeof(struct brain));
 	brain->nc = lines;
-	brain->nmax = lines * 2;
+	brain->nmax = lines + 1;
 	brain->neurons = (struct neuron**)malloc(sizeof(struct neuron) * brain->nmax);
 	int c = 0;
 	while (fgets(line, 1024, file)) {
@@ -72,8 +72,8 @@ struct brain* gen_brain(char* filename)
 		char* token = strtok(tmp, " ");
 		uint id = (uint)atoi(token);
 		uint lc;
-		uint* links = (uint*)malloc(sizeof(uint));
-		uint* wts = (uint*)malloc(sizeof(uint));
+		uint* links = (uint*)malloc(sizeof(uint) * lines);
+		uint* wts = (uint*)malloc(sizeof(uint) * lines);
 		uint lmax;
 		int b = 0;
 		int a = 0;
@@ -92,8 +92,8 @@ struct brain* gen_brain(char* filename)
 				set_lmax = 1;
 				continue;
 			}
-			links = (uint*)realloc(links, sizeof(uint) * lmax);
-			wts = (uint*)realloc(wts, sizeof(uint) * lmax);
+			//links = (uint*)realloc(links, sizeof(uint) * lmax);
+			//wts = (uint*)realloc(wts, sizeof(uint) * lmax);
 			if (set_l == 0) {
 				links[b] = (uint)atoi(token);
 				set_l = 1;
@@ -117,6 +117,8 @@ struct brain* gen_brain(char* filename)
 		n->lmax = lmax;
 		n->links = links;
 		n->wts = wts;
+		free(links);
+		free(wts);
 		n->thisstate = 0;
 		n->nextstate = 0;
 		n->fired = 0;

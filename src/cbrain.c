@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	save_brain(bb, "brain.txt");
 	struct brain* b = gen_brain("brain.txt");
 	printf("creating threads...\n");
-	struct nthread* nt1 = thread_struct_new(0, 29);
+	struct nthread* nt1 = thread_struct_new(0, 999);
 	struct nthread* at  = thread_struct_new(0, 0);
 	thread_create(nt1, b, 0, sleep_t);
 	thread_create(at, b, 1, sleep_t);

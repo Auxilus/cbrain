@@ -57,7 +57,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 void neuron_link_random(struct brain* b)
 {
 	for (int i = 0; i < (int)b->nc; i++) {
-		for (int j = 0; j < (b->nc / 2); j++) {
+		for (int j = 0; j < 10; j++) {
 			uint id = (uint)rand_int(0, b->nc - 1);
 			if (!(id == b->neurons[i]->id) && (checkexist(id, b->neurons[i]->links, b->neurons[i]->lc) == -1)) {
 				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(1, 20));
@@ -89,7 +89,7 @@ void neuron_accum(struct neuron* n, uint wt)
 
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	//show_stat(n);
+	show_stat(b->neurons[100]);
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
 		n->thisstate = 0;
