@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	printf("creating random links...\n");
 	neuron_link_random(b);
 	save_brain(b, "brain.txt");
-	gen_brain("brain.txt");
+	struct brain* bb = gen_brain("brain.txt");
 	printf("creating threads...\n");
 	struct nthread* nt1 = thread_struct_new(0, 29);
 	struct nthread* at  = thread_struct_new(0, 0);

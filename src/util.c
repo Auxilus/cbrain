@@ -58,35 +58,30 @@ struct brain* gen_brain(char* filename)
 	file = fopen(filename, "r");
 	char line[1024];
 	int lines = file_num_lines(filename);
-	uint* ids = (uint*)malloc(sizeof(uint) * lines);
-	uint* links = (uint*)malloc(sizeof(uint) * lines);
-	uint* wts = (uint*)malloc(sizeof(uint) * lines);
+	struct brain* brain = (struct brain*)malloc(sizeof(struct brain));
+	brain->nc = lines;
+	brain->nmax = lines * 2;
+	brain->neurons = (struct neuron**)malloc(sizeof(struct neuron) * brain->nmax);
 	int c = 0;
-	int b = 0;
-	int a = 0;
 	int set_l = 0;
 	int set_w = 0;
 	int set_lc = 0;
 	int set_lmax = 0;
-	uint lc, lmax;
 	while (fgets(line, 1024, file)) {
 		char* tmp = strdup(line);
 		char* token = strtok(tmp, " ");
-		ids[c] = (uint)atoi(token);
-		c += 1;
-		token = strtok(NULL, " ");
-		printf("token is (lc): %s\n", token);
-		lc = (uint)atoi(token);
-		token = strtok(NULL, " ");
-		printf("token is (lmax): %s\n", token);
-		lmax = (uint)atoi(token);
+		uint id = (uint)atoi(token);
+		uint lc;
+		uint* links = (uint*)malloc(sizeof(uint));
+		uint* wts = (uint*)malloc(sizeof(uint));
+		uint lmax;
+		int b = 0;
+		int a = 0;
 		while (token != NULL) {
 			token = strtok(NULL, " ");
 			if (token == NULL) {
-				printf("NULL token, exiting loop\n");
 				break;
 			}
-			printf("token is: %s\n", token);
 			if (set_lc == 0) {
 				lc = (uint)atoi(token);
 				set_lc = 1;
@@ -97,6 +92,8 @@ struct brain* gen_brain(char* filename)
 				set_lmax = 1;
 				continue;
 			}
+			links = (uint*)realloc(links, sizeof(uint) * lmax);
+			wts = (uint*)realloc(wts, sizeof(uint) * lmax);
 			if (set_l == 0) {
 				links[b] = (uint)atoi(token);
 				set_l = 1;
@@ -114,5 +111,20 @@ struct brain* gen_brain(char* filename)
 			token = strtok(NULL, " ");
 		}
 		free(tmp);
+		struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
+		n->id = id;
+		n->lc = lc;
+		n->lmax = lmax;
+		n->links = links;
+		n->wts = wts;
+		n->thisstate = 0;
+		n->nextstate = 0;
+		n->fired = 0;
+		n->n_fired = 0;
+
+		brain->neurons[c] = n;
+		c += 1;
 	}
+	return brain;
+
 }
