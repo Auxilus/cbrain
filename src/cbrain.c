@@ -16,11 +16,11 @@ int main(int argc, char* argv[])
 		sleep_t   = atoi(argv[2]);
 
 	printf("creating brain...\n");
-	struct brain* b = brain_init((uint)neurons_no);
+	struct brain* bb = brain_init((uint)neurons_no);
 	printf("creating random links...\n");
-	neuron_link_random(b);
-	save_brain(b, "brain.txt");
-	struct brain* bb = gen_brain("brain.txt");
+	neuron_link_random(bb);
+	save_brain(bb, "brain.txt");
+	struct brain* b = gen_brain("brain.txt");
 	printf("creating threads...\n");
 	struct nthread* nt1 = thread_struct_new(0, 29);
 	struct nthread* at  = thread_struct_new(0, 0);

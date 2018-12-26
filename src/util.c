@@ -63,11 +63,11 @@ struct brain* gen_brain(char* filename)
 	brain->nmax = lines * 2;
 	brain->neurons = (struct neuron**)malloc(sizeof(struct neuron) * brain->nmax);
 	int c = 0;
-	int set_l = 0;
-	int set_w = 0;
-	int set_lc = 0;
-	int set_lmax = 0;
 	while (fgets(line, 1024, file)) {
+		int set_l = 0;
+		int set_w = 0;
+		int set_lc = 0;
+		int set_lmax = 0;
 		char* tmp = strdup(line);
 		char* token = strtok(tmp, " ");
 		uint id = (uint)atoi(token);
