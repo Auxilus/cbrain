@@ -84,5 +84,7 @@ void* thread_func(void*);
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
 void save_brain(struct brain*, char*);
+struct brain* gen_brain(char*);
+int file_num_lines(char*);
 
 #endif

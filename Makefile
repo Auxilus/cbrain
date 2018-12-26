@@ -13,4 +13,4 @@ cbrain: ${OBJ}
 clean:
 	rm cbrain
 	rm src/*.o
-	rm brain.csv
+	rm brain.txt

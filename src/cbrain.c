@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
 	struct brain* b = brain_init((uint)neurons_no);
 	printf("creating random links...\n");
 	neuron_link_random(b);
-	save_brain(b, "brain.csv");
+	save_brain(b, "brain.txt");
+	gen_brain("brain.txt");
 	printf("creating threads...\n");
 	struct nthread* nt1 = thread_struct_new(0, 29);
 	struct nthread* at  = thread_struct_new(0, 0);
