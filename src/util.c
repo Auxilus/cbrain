@@ -28,7 +28,7 @@ void save_brain(struct brain* b, char* filename)
 	for (int i = 0; i < b->nc; i++) {
 		struct neuron* n = b->neurons[i];
 		for (int j = 0; j < n->lc; j++) {
-			fprintf(file, "%u,%u,%u\n", n->id, n->links[j], n->wts[j]);
+			fprintf(file, "%u;%u;%u\n", n->id, n->links[j], n->wts[j]);
 		}
 	}
 	fclose(file);
