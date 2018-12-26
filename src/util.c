@@ -58,11 +58,13 @@ struct brain* gen_brain(char* filename)
 	file = fopen(filename, "r");
 	char line[1024];
 	int lines = file_num_lines(filename);
+	struct brain* b = brain_init(lines);
+	printf("no of neurons: %d", lines);
 	uint* ids = (uint*)malloc(sizeof(uint) * lines);
 	uint* links = (uint*)malloc(sizeof(uint) * lines);
 	uint* wts = (uint*)malloc(sizeof(uint) * lines);
 	int c = 0;
-	int b = 0;
+	int d = 0;
 	int a = 0;
 	int set_l = 0;
 	int set_w = 0;
@@ -73,7 +75,6 @@ struct brain* gen_brain(char* filename)
 		char* tmp = strdup(line);
 		char* token = strtok(tmp, " ");
 		ids[c] = (uint)atoi(token);
-		c += 1;
 		token = strtok(NULL, " ");
 		printf("token is (lc): %s\n", token);
 		lc = (uint)atoi(token);
@@ -88,7 +89,7 @@ struct brain* gen_brain(char* filename)
 			}
 			printf("token is: %s\n", token);
 			if (set_lc == 0) {
-				lc = (uint)atoi(token);
+				b->neurons[c]->lc = (uint)atoi(token);
 				set_lc = 1;
 				continue;
 			}
@@ -98,14 +99,14 @@ struct brain* gen_brain(char* filename)
 				continue;
 			}
 			if (set_l == 0) {
-				links[b] = (uint)atoi(token);
+				b->neurons[c]->links[d] = (uint)atoi(token);
 				set_l = 1;
 				set_w = 0;
-				b += 1;
+				d += 1;
 				continue;
 			}
 			if (set_w == 0) {
-				wts[a] = (uint)atoi(token);
+				b->neurons[c]->wts[a] = (uint)atoi(token);
 				set_w = 1;
 				set_l = 0;
 				a += 1;
@@ -113,6 +114,8 @@ struct brain* gen_brain(char* filename)
 			}
 			token = strtok(NULL, " ");
 		}
+		c += 1;
 		free(tmp);
 	}
+	return b;
 }
