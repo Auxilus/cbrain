@@ -29,7 +29,11 @@ void save_brain(struct brain* b, char* filename)
 		struct neuron* n = b->neurons[i];
 		fprintf(file, "%u %u %u ", n->id, n->lc, n->lmax);
 		for (int j = 0; j < n->lc; j++) {
-			fprintf(file, "%u %u ", n->links[j], n->wts[j]);
+			if (j == (n->lc - 1)) {
+				fprintf(file, "%u %u", n->links[j], n->wts[j]);
+			}
+			else
+				fprintf(file, "%u %u ", n->links[j], n->wts[j]);
 		}
 		fprintf(file, "\n");
 	}
@@ -59,7 +63,7 @@ struct brain* gen_brain(char* filename)
 	char line[1024];
 	int lines = file_num_lines(filename);
 	struct brain* brain = (struct brain*)malloc(sizeof(struct brain));
-	brain->nc = lines;
+	brain->nc = lines + 1;
 	brain->nmax = lines + 1;
 	brain->neurons = (struct neuron**)malloc(sizeof(struct neuron) * brain->nmax);
 	int c = 0;
@@ -79,9 +83,10 @@ struct brain* gen_brain(char* filename)
 		int a = 0;
 		while (token != NULL) {
 			token = strtok(NULL, " ");
-			if (token == NULL) {
+			if ((token == '\n') || (token == NULL)) {
 				break;
 			}
+			printf("token: %s\n", token);
 			if (set_lc == 0) {
 				lc = (uint)atoi(token);
 				set_lc = 1;
@@ -108,9 +113,9 @@ struct brain* gen_brain(char* filename)
 				a += 1;
 				continue;
 			}
-			token = strtok(NULL, " ");
 		}
 		free(tmp);
+		free(token);
 		struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 		n->id = id;
 		n->lc = lc;

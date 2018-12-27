@@ -89,7 +89,7 @@ void neuron_accum(struct neuron* n, uint wt)
 
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	show_stat(n);
+	//show_stat(n);
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
 		n->thisstate = 0;
