@@ -142,5 +142,9 @@ struct brain* brain_init(int s)
 
 void show_stat(struct neuron* n)
 {
-	printf("ID: %d  thisstate: %d  nextstate: %d\n", n->id, n->thisstate, n->nextstate);
+	printf("ID: %d  thisstate: %d  nextstate: %d ", n->id, n->thisstate, n->nextstate);
+	for (int i = 0; i < n->lc; i++) {
+		printf("%u:%u ", n->links[i], n->wts[i]);
+	}
+	printf("\n");
 }

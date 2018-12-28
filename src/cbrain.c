@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
 	neuron_link_random(bb);
 	save_brain(bb, "brain.txt");
 	struct brain* b = gen_brain("brain.txt");
+	exit(1);
 	printf("creating threads...\n");
 	struct nthread* nt1 = thread_struct_new(0, 999);
 	struct nthread* at  = thread_struct_new(0, 0);
