@@ -90,6 +90,7 @@ void neuron_accum(struct neuron* n, uint wt)
 int neuron_update(struct neuron* n, struct brain* b)
 {
 	//show_stat(n);
+	assert(n->id <= (b->nc - 1));
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
 		n->thisstate = 0;
@@ -120,13 +121,9 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
+		assert((n->links[i]) && (n->links[i] <= (b->nc - 1)) && (n->wts[i]));
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
 	}
-	/*printf("neuron %u fired sending wt to [", n->id);
-	for (uint i = 0; i < n->lc; i++) {
-		printf("%u ", n->links[i]);
-	}
-	printf("]\n");*/
 }
 
 struct brain* brain_init(int s)
