@@ -15,14 +15,8 @@ int main(int argc, char* argv[])
 	else
 		sleep_t   = atoi(argv[2]);
 
-	printf("creating brain...\n");
-	struct brain* bb = brain_init((uint)neurons_no);
-	printf("creating random links...\n");
-	neuron_link_random(bb);
-	save_brain(bb, "brain.txt");
-	struct brain* b = gen_brain("brain.txt");
-	printf("data: %u", b->nc);
-	printf("creating threads...\n");
+	struct brain* b = brain_init((uint)neurons_no);
+	neuron_link_random(b);
 	struct nthread* nt1 = thread_struct_new(0, 999);
 	struct nthread* at  = thread_struct_new(0, 0);
 	thread_create(nt1, b, 0, sleep_t);
