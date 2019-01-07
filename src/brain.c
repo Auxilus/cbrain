@@ -121,7 +121,8 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
-		assert((n->links[i]) && (n->links[i] <= (b->nc - 1)) && (n->wts[i]));
+		assert(n->links[i] <= (b->nc - 1));
+		assert(n->wts[i]);
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
 	}
 }
