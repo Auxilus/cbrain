@@ -6,6 +6,7 @@ TODO
 - Add load balancer to decide how many neurons each thread should process
   based on the b->nc and current cpu usage
 - Add neuron types: sensory, motor, connecting
+- Add random brain mutation
 - Add basic stimulation sources
 
 DONE
