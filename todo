@@ -7,7 +7,6 @@ TODO
   based on the b->nc and current cpu usage
 - Add neuron types: sensory, motor, connecting
 - Add random brain mutation
-- Add basic stimulation sources
 
 DONE
 - Add command line argument parser
