@@ -31,12 +31,15 @@ SOFTWARE.
 
 typedef unsigned int uint;
 
+typedef enum {undefined, sensory, intermidiate, motor} type;
+
 struct neuron {
 	uint id;
 	uint *links;
 	uint *wts;
 	uint lc;
 	uint lmax;
+	type n_type;
 
 	uint thisstate;
 	uint nextstate;
@@ -69,7 +72,7 @@ struct thread_bank {
 struct brain* brain_init(int);
 void brain_mutate(struct brain*);
 struct neuron* neuron_init(uint);
-void neuron_link(struct neuron*, int id, uint);
+void neuron_link(struct neuron*, struct neuron*, uint);
 void neuron_link_random(struct brain*);
 void neuron_unlink(struct neuron*, struct neuron*);
 void neuron_accum(struct neuron*, uint);
@@ -77,6 +80,7 @@ void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void neuron_free(struct neuron*, struct neuron*);
+void neuron_set_type(struct neuron*, type);
 void show_stat(struct neuron*);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
