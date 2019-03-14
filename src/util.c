@@ -1,13 +1,22 @@
 #include "header.h"
 
-int rand_int(int x, int y)
+int rand_int(int x, int y) 
 {
 	int num;
 	num = rand() % (y + 1 - x) + x;
 	return num;
 }
 
-int checkexist(uint val, uint* arr, int size) {
+float rand_float(float min, float max)
+{
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = max - min;
+	float ret = random * diff;
+	return (min + ret) * 10.0;
+}
+
+int checkexist(uint val, uint* arr, int size)
+{
 	for (int i = 0; i < size; i++) {
 		if (arr[i] == val) {
 			return i;
