@@ -29,8 +29,9 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-typedef unsigned int uint;
+#define DEBUG 0
 
+typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;
 
 struct neuron {

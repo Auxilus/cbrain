@@ -45,7 +45,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
-			printf("reallocating memory... nid: %u\n", src->id);
+			if (DEBUG == 1) { printf("reallocating memory... nid: %u\n", src->id); }
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
 		}
@@ -90,7 +90,7 @@ void neuron_accum(struct neuron* n, uint wt)
 
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	//show_stat(n);
+	//if (DEBUG == 1) { show_stat(n); }
 	assert(n->id <= (b->nc - 1));
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
@@ -124,6 +124,7 @@ void neuron_set_type(struct neuron* n, type t)
 
 void neuron_fire(struct neuron* n, struct brain* b)
 {
+	if (DEBUG == 1) { printf("firing neuron %d\n", n->id); }
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
@@ -150,13 +151,13 @@ void brain_mutate(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < 0.1) {
+		if (random < 0.05) {
 			for (int j = 0; j < rand_int(1, b->neurons[i]->lc); j++) {
 				float random2 = rand_float(0, 1);
-				if (random2 < 0.05) {
+				if (random2 < 0.01) {
 					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
 					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
-					printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]);
+					if (DEBUG == 1) { printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]); }
 				}
 			}
 		}
