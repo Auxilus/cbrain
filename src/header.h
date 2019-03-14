@@ -31,7 +31,7 @@ SOFTWARE.
 
 typedef unsigned int uint;
 
-typedef enum {undefined, sensory, intermidiate, motor} type;
+typedef enum {undefined, sensory, intermediate, motor} type;
 
 struct neuron {
 	uint id;

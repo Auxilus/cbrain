@@ -5,7 +5,6 @@ TODO
 - Add function to add extra neurons and link them with existing neurons
 - Add load balancer to decide how many neurons each thread should process
   based on the b->nc and current cpu usage
-- Add neuron types: sensory, motor, connecting
 
 DONE
 - Add command line argument parser
@@ -13,3 +12,4 @@ DONE
 - Add unlink_neuron function
 - Add link_random_neuron
 - Add random brain mutation
+- Add neuron types: sensory, motor, intermediate
