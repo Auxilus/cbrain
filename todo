@@ -6,10 +6,10 @@ TODO
 - Add load balancer to decide how many neurons each thread should process
   based on the b->nc and current cpu usage
 - Add neuron types: sensory, motor, connecting
-- Add random brain mutation
 
 DONE
 - Add command line argument parser
 - Add multi-threaded neuron updater
 - Add unlink_neuron function
 - Add link_random_neuron
+- Add random brain mutation
