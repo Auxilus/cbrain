@@ -11,8 +11,9 @@ float rand_float(float min, float max)
 {
 	float random = ((float)rand()) / (float)RAND_MAX;
 	float diff = max - min;
-	float ret = random * diff;
-	return (min + ret) * 10.0;
+	float p = random * diff;
+	float ret = (p + min);
+	return ret;
 }
 
 int checkexist(uint val, uint* arr, int size)
