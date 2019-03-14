@@ -68,13 +68,14 @@ struct thread_bank {
 /*	src/brain.c	*/
 struct brain* brain_init(int);
 struct neuron* neuron_init(uint);
-void neuron_link(struct neuron*, struct neuron*, uint);
+void neuron_link(struct neuron*, int id, uint);
 void neuron_link_random(struct brain*);
 void neuron_unlink(struct neuron*, struct neuron*);
 void neuron_accum(struct neuron*, uint);
 void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
+void neuron_free(struct neuron*, struct neuron*);
 void show_stat(struct neuron*);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
