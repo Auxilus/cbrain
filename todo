@@ -2,7 +2,6 @@ TODO
 - Add free neuron function to delete neurons
 - Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
-- Add function to add extra neurons and link them with existing neurons
 - Add load balancer to decide sleep time, how many neurons each thread should process
   based on the b->nc and current cpu usage
 
