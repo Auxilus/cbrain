@@ -22,8 +22,6 @@ SOFTWARE.
 
 #include "header.h"
 
-#define THRESHOLD 20
-
 struct neuron* neuron_init(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
@@ -85,6 +83,7 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 
 void neuron_accum(struct neuron* n, uint wt)
 {
+	if (DEBUG >= 1) { printf("accumulating neuron %d with weight %d\n", n->id, wt); }
 	n->nextstate += wt;
 }
 

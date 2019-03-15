@@ -30,6 +30,7 @@ SOFTWARE.
 #include <pthread.h>
 
 #define DEBUG 2
+#define THRESHOLD 20
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;

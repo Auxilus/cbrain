@@ -17,8 +17,6 @@ int main(int argc, char* argv[])
 
 	struct brain* b = brain_init((uint)neurons_no);
 	neuron_link_random(b);
-	neuron_add(b);
-	exit(1);
 	if (DEBUG >= 1) { printf("%d neurons generated and randomly linked\n", neurons_no); }
 	struct nthread* nt1 = thread_struct_new(0, neurons_no-1);
 	struct nthread* at  = thread_struct_new(0, 0);
