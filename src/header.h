@@ -29,7 +29,7 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-#define DEBUG 0
+#define DEBUG 2
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;
@@ -82,6 +82,7 @@ int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void neuron_free(struct neuron*, struct neuron*);
 void neuron_set_type(struct neuron*, type);
+void neuron_add(struct brain*);
 void show_stat(struct neuron*);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);

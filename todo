@@ -13,3 +13,4 @@ DONE
 - Add link_random_neuron
 - Add random brain mutation
 - Add neuron types: sensory, motor, intermediate
+- Add function to add extra neurons and link them with existing neurons
