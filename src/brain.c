@@ -173,13 +173,13 @@ void brain_mutate(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < 0.05) {
+		if (random < 0.005) {
 			for (int j = 0; j < rand_int(1, b->neurons[i]->lc); j++) {
 				float random2 = rand_float(0, 1);
-				if (random2 < 0.01) {
+				if (random2 < 0.001) {
 					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
 					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
-					if (DEBUG >= 1) { printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]); }
+					if (DEBUG >= 0) { printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]); }
 				}
 			}
 		}
