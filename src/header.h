@@ -29,7 +29,11 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
+#define DEBUG 0
+#define THRESHOLD 20
+
 typedef unsigned int uint;
+typedef enum {undefined, sensory, intermediate, motor} type;
 
 struct neuron {
 	uint id;
@@ -37,6 +41,7 @@ struct neuron {
 	uint *wts;
 	uint lc;
 	uint lmax;
+	type n_type;
 
 	uint thisstate;
 	uint nextstate;
@@ -67,6 +72,7 @@ struct thread_bank {
 
 /*	src/brain.c	*/
 struct brain* brain_init(int);
+void brain_mutate(struct brain*);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
 void neuron_link_random(struct brain*);
@@ -75,6 +81,9 @@ void neuron_accum(struct neuron*, uint);
 void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
+void neuron_free(struct neuron*, struct neuron*);
+void neuron_set_type(struct neuron*, type);
+void neuron_add(struct brain*);
 void show_stat(struct neuron*);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
@@ -84,6 +93,7 @@ void* thread_func(void*);
 /*	src/util.c	*/
 int checkexist(uint, uint*, int);
 int rand_int(int, int);
+float rand_float(float, float);
 void save_brain(struct brain*, char*);
 struct brain* gen_brain(char*);
 int file_num_lines(char*);

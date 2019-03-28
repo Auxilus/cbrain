@@ -2,15 +2,15 @@ TODO
 - Add free neuron function to delete neurons
 - Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
-- Add function to add extra neurons and link them with existing neurons
-- Add load balancer to decide how many neurons each thread should process
+- Add load balancer to decide sleep time, how many neurons each thread should process
   based on the b->nc and current cpu usage
-- Add neuron types: sensory, motor, connecting
-- Add random brain mutation
-- Add basic stimulation sources
+- CSV parser to generate brain from a CSV file
 
 DONE
 - Add command line argument parser
 - Add multi-threaded neuron updater
 - Add unlink_neuron function
 - Add link_random_neuron
+- Add random brain mutation
+- Add neuron types: sensory, motor, intermediate
+- Add function to add extra neurons and link them with existing neurons

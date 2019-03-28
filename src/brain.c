@@ -22,8 +22,6 @@ SOFTWARE.
 
 #include "header.h"
 
-#define THRESHOLD 20
-
 struct neuron* neuron_init(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
@@ -36,15 +34,16 @@ struct neuron* neuron_init(uint id)
 	n->nextstate = 0;
 	n->fired     = 0;
 	n->n_fired   = 0;
+	n->n_type   = undefined;
 	return n;
 }
 
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
-	if (!(src->id == n->id)) {
+	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
-			printf("reallocating memory... nid: %u\n", src->id);
+			if (DEBUG >= 1) { printf("reallocating memory... nid: %u\n", src->id); }
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
 		}
@@ -84,12 +83,13 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 
 void neuron_accum(struct neuron* n, uint wt)
 {
+	if (DEBUG >= 1) { printf("accumulating neuron %d with weight %d\n", n->id, wt); }
 	n->nextstate += wt;
 }
 
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	//show_stat(n);
+	//if (DEBUG == 1) { show_stat(n); }
 	assert(n->id <= (b->nc - 1));
 	if (n->thisstate >= THRESHOLD) {
 		neuron_fire(n, b);
@@ -116,8 +116,37 @@ int neuron_update_range(uint s, uint e, struct brain* b)
 	return nf;
 }
 
+void neuron_set_type(struct neuron* n, type t)
+{
+	n->n_type = t;
+}
+
+void neuron_add(struct brain* b)
+{
+	struct neuron* n;
+	n = neuron_init(b->nc);
+	if ((b->nc + 1) > b->nmax) {
+		b->nmax *= 2;
+		if (DEBUG >= 1) { printf("reallocating memory... nc: %u\n", b->nc); }
+	}
+	b->nc += 1;
+	b->neurons = (struct neuron**)realloc(b->neurons, sizeof(struct neuron) * b->nmax);
+	if (DEBUG >= 1) { printf("adding new neuron to brain with id: %d\n", n->id);  }
+	b->neurons[b->nc] = n;
+	
+	for (int j = 0; j < 10; j++) {
+		uint id = (uint)rand_int(0, b->nc - 1);
+		if (!(id == n->id) && (checkexist(id, n->links, n->lc) == -1)) {
+			if (DEBUG >= 2) { printf("linking %d to %d with weight\n", id, n->id);  }
+			neuron_link(n, b->neurons[(int)id], rand_int(1, 20));
+		}
+	}
+	
+}
+
 void neuron_fire(struct neuron* n, struct brain* b)
 {
+	if (DEBUG >= 1) { printf("firing neuron %d\n", n->id); }
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
@@ -140,6 +169,22 @@ struct brain* brain_init(int s)
 	return b;
 }
 
+void brain_mutate(struct brain* b)
+{
+	for (int i = 0; i < b->nc; i++) {
+		float random = rand_float(0, 1);
+		if (random < 0.005) {
+			for (int j = 0; j < rand_int(1, b->neurons[i]->lc); j++) {
+				float random2 = rand_float(0, 1);
+				if (random2 < 0.001) {
+					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
+					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
+					if (DEBUG >= 0) { printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]); }
+				}
+			}
+		}
+	}
+}
 
 void show_stat(struct neuron* n)
 {

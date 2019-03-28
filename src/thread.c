@@ -78,6 +78,7 @@ void *thread_func(void* args)
 	if (f == 0) {
 		for (;;) {
 			neuron_update_range(start, end, b);
+			brain_mutate(b);
 			sleep(sleep_t);
 		}
 	}
