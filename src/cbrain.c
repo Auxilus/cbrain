@@ -9,11 +9,7 @@ int main(int argc, char* argv[])
 	}
 	int neurons_no = atoi(argv[1]);
 	uint sleep_t;
-	if (argc < 3) {
-		sleep_t = 1;
-	}
-	else
-		sleep_t   = atoi(argv[2]);
+	sleep_t = (argc < 3) ? 1 : atoi(argv[2]);
 
 	struct brain* b = brain_init((uint)neurons_no);
 	neuron_link_random(b);
