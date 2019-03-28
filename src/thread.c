@@ -84,7 +84,7 @@ void *thread_func(void* args)
 	}
 	if (f == 1) {
 		for (;;) {
-			neuron_accum(b->neurons[rand_int(0, b->nc - 1)], rand_int(0, 10));
+			neuron_accum(b->neurons[rand_int(0, b->nc - 1)], rand_int(1, 10));
 			sleep(sleep_t);
 		}
 	}
