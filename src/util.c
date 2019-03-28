@@ -1,4 +1,5 @@
 #include "header.h"
+#include <stdarg.h>
 
 int rand_int(int x, int y) 
 {
@@ -69,4 +70,16 @@ struct brain* gen_brain(char* filename)
 	else
 		return NULL;
 
+}
+
+int cbrain_print(int level, const char* str, ...)
+{
+	va_list list;
+	va_start(list, str);
+	fflush(stdout);
+	fflush(stderr);
+	if (level <= DEBUG) {
+		vfprintf(stdout, str, list);
+	}
+	return 0;
 }
