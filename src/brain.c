@@ -146,7 +146,7 @@ void neuron_add(struct brain* b)
 
 void neuron_fire(struct neuron* n, struct brain* b)
 {
-	cbrain_print(1, "firing neuron %d\n", n->id);
+	cbrain_print(2, "firing neuron %d\n", n->id);
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
@@ -173,13 +173,13 @@ void brain_mutate(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < 0.005) {
+		if (random < 0.00005) {
 			for (int j = 0; j < rand_int(1, b->neurons[i]->lc); j++) {
 				float random2 = rand_float(0, 1);
 				if (random2 < 0.001) {
 					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
 					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
-					cbrain_print(0, "mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]);
+					cbrain_print(0, "mutated %d:%d with weight %d\n", i, b->neurons[i]->links[mut_wt_pos], b->neurons[i]->wts[mut_wt_pos]);
 				}
 			}
 		}
