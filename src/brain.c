@@ -43,7 +43,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
-			if (DEBUG >= 1) { printf("reallocating memory... nid: %u\n", src->id); }
+			cbrain_print(2, "reallocating memory... nid: %u\n", src->id);
 			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
 			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
 		}
@@ -83,7 +83,7 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 
 void neuron_accum(struct neuron* n, uint wt)
 {
-	if (DEBUG >= 1) { printf("accumulating neuron %d with weight %d\n", n->id, wt); }
+	cbrain_print(1, "accumulating neuron %d with weight %d\n", n->id, wt);
 	n->nextstate += wt;
 }
 
@@ -127,17 +127,17 @@ void neuron_add(struct brain* b)
 	n = neuron_init(b->nc);
 	if ((b->nc + 1) > b->nmax) {
 		b->nmax *= 2;
-		if (DEBUG >= 1) { printf("reallocating memory... nc: %u\n", b->nc); }
+		cbrain_print(2, "reallocating memory... nc: %u\n", b->nc);
 	}
 	b->nc += 1;
 	b->neurons = (struct neuron**)realloc(b->neurons, sizeof(struct neuron) * b->nmax);
-	if (DEBUG >= 1) { printf("adding new neuron to brain with id: %d\n", n->id);  }
+	cbrain_print(1, "adding new neuron to brain with id: %d\n", n->id);
 	b->neurons[b->nc] = n;
 	
 	for (int j = 0; j < 10; j++) {
 		uint id = (uint)rand_int(0, b->nc - 1);
 		if (!(id == n->id) && (checkexist(id, n->links, n->lc) == -1)) {
-			if (DEBUG >= 2) { printf("linking %d to %d with weight\n", id, n->id);  }
+			cbrain_print(1, "linking %d to %d with weight\n", id, n->id);
 			neuron_link(n, b->neurons[(int)id], rand_int(1, 20));
 		}
 	}
@@ -146,7 +146,7 @@ void neuron_add(struct brain* b)
 
 void neuron_fire(struct neuron* n, struct brain* b)
 {
-	if (DEBUG >= 1) { printf("firing neuron %d\n", n->id); }
+	cbrain_print(1, "firing neuron %d\n", n->id);
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
@@ -179,7 +179,7 @@ void brain_mutate(struct brain* b)
 				if (random2 < 0.001) {
 					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
 					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
-					if (DEBUG >= 0) { printf("mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]); }
+					cbrain_print(0, "mutated %d:%d with weight %d\n", i, mut_wt_pos, b->neurons[i]->wts[mut_wt_pos]);
 				}
 			}
 		}

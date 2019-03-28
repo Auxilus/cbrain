@@ -29,7 +29,7 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-#define DEBUG 0
+#define DEBUG 2
 #define THRESHOLD 20
 
 typedef unsigned int uint;
@@ -97,5 +97,5 @@ float rand_float(float, float);
 void save_brain(struct brain*, char*);
 struct brain* gen_brain(char*);
 int file_num_lines(char*);
-
+int cbrain_print(int, const char*, ...)__attribute__((format(printf, 2, 3)));
 #endif
