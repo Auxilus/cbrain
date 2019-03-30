@@ -83,7 +83,7 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 
 void neuron_accum(struct neuron* n, uint wt)
 {
-	cbrain_print(1, "accumulating neuron %d with weight %d\n", n->id, wt);
+	cbrain_print(2, "accumulating neuron %d with weight %d\n", n->id, wt);
 	n->nextstate += wt;
 }
 
@@ -173,15 +173,10 @@ void brain_mutate(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < 0.00005) {
-			for (int j = 0; j < rand_int(1, b->neurons[i]->lc); j++) {
-				float random2 = rand_float(0, 1);
-				if (random2 < 0.001) {
-					int mut_wt_pos = rand_int(0, b->neurons[i]->lc - 1);
-					b->neurons[i]->wts[mut_wt_pos] = rand_int(1, 20);
-					cbrain_print(0, "mutated %d:%d with weight %d\n", i, b->neurons[i]->links[mut_wt_pos], b->neurons[i]->wts[mut_wt_pos]);
-				}
-			}
+		if (random < 0.00000001) {
+			int l = rand_int(0, b->neurons[i]->lc - 1);
+			b->neurons[i]->wts[l] = rand_int(1, 20);
+			cbrain_print(0, "mutated %d:%d with weight %d\n", i, b->neurons[i]->links[l], b->neurons[i]->wts[l]);
 		}
 	}
 }

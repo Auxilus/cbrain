@@ -29,7 +29,7 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-#define DEBUG 0
+#define DEBUG 1
 #define THRESHOLD 20
 
 typedef unsigned int uint;
