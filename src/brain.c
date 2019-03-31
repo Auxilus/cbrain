@@ -181,6 +181,17 @@ void brain_mutate(struct brain* b)
 	}
 }
 
+float brain_eval(struct brain* b, float max)
+{
+	int accumulator = 0;
+	for (int i = 0; i < b->nc; i++) {
+		if (b->neurons[i]->type == motor) {
+			accumulator += b->neurons[i]->thisstate;
+		}
+	}
+	return 100 * accumulator / max;
+}
+
 void show_stat(struct neuron* n)
 {
 	printf("ID: %d  thisstate: %d  nextstate: %d ", n->id, n->thisstate, n->nextstate);
