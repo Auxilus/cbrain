@@ -185,7 +185,7 @@ float brain_eval(struct brain* b, float max)
 {
 	int accumulator = 0;
 	for (int i = 0; i < b->nc; i++) {
-		if (b->neurons[i]->type == motor) {
+		if (b->neurons[i]->n_type == motor) {
 			accumulator += b->neurons[i]->thisstate;
 		}
 	}
