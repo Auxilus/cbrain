@@ -52,9 +52,16 @@ struct neuron {
 struct brain {
 	uint nc;
 	uint nmax;
-
+	float fitness;
 	struct neuron** neurons;
 } brain;
+
+struct jar {
+	uint bc;
+	uint bmax;
+	struct brain** brains;
+	struct brain* fittest;
+} jar;
 
 struct nthread {
 	pthread_t tid;
@@ -72,8 +79,6 @@ struct thread_bank {
 
 /*	src/brain.c	*/
 struct brain* brain_init(int);
-void brain_mutate(struct brain*);
-float brain_eval(struct brain*, float);
 void brain_neuron_type(struct brain*, type);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
@@ -87,6 +92,11 @@ void neuron_free(struct neuron*, struct neuron*);
 void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void show_stat(struct neuron*);
+/*	src/jar.c	*/
+struct jar* jar_init(int);
+void jar_update(struct jar*);
+void brain_mutate(struct brain*);
+void brain_eval(struct brain*, float);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
