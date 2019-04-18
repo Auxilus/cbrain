@@ -59,8 +59,8 @@ struct brain {
 struct jar {
 	uint bc;
 	uint bmax;
-	struct brain** brains;
 	struct brain* fittest;
+	struct brain** brains;
 } jar;
 
 struct nthread {

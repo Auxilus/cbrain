@@ -10,14 +10,21 @@ struct jar* jar_init(int b_count)
 		j->brains[i] = brain_init(rand_int(2, 1000));
 	}
 	j->fittest = (struct brain*)malloc(sizeof(struct brain));
+	j->fittest = brain_init(-1);
 	return j;
 }
 
 void jar_update(struct jar* j)
 {
 	for (int i = 0; i < j->bc; i++) {
-		if (j->brains[i]->fitness > j->fittest->fitness) {
-			j->fittest = j->brains[i];
+		neuron_update_range(0, j->brains[i]->nc - 1, j->brains[i]);
+		//brain_eval(0);
+		brain_mutate(j->brains[i]);
+	}
+
+	for (int k = 0; k < j->bc; k++) {
+		if (j->brains[k]->fitness > j->fittest->fitness) {
+			j->fittest = j->brains[k];
 		}
 	}
 }
