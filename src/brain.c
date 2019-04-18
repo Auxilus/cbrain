@@ -146,7 +146,7 @@ void neuron_add(struct brain* b)
 
 void neuron_fire(struct neuron* n, struct brain* b)
 {
-	cbrain_print(2, "firing neuron %d\n", n->id);
+	cbrain_print(3, "firing neuron %d\n", n->id);
 	int p;
 	p = n->lc;
 	for (int i = 0; i < p; i++) {
