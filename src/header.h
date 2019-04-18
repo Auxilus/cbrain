@@ -29,11 +29,13 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-#define DEBUG 1
+#define DEBUG 4
 #define THRESHOLD 20
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;
+
+pthread_mutex_t lock;
 
 struct neuron {
 	uint id;

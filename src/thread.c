@@ -60,7 +60,7 @@ int thread_create(struct nthread* nt, struct brain* b, uint f, uint sleep_t)
 	return ret;
 }
 
-void *thread_func(void* args)
+void* thread_func(void* args)
 {
 	uint start = ((struct thread_args*)args)->s;
 	uint end   = ((struct thread_args*)args)->e;
@@ -69,22 +69,28 @@ void *thread_func(void* args)
 	struct brain* b = ((struct thread_args*)args)->b;
 	if (f == -1) {
 		for (;;) {
+			pthread_mutex_lock(&lock);
 			for (int i = 0; i < (int)b->nc; i++) {
 				neuron_fire(b->neurons[i], b);
 				sleep(sleep_t);
 			}
+			pthread_mutex_unlock(&lock);
 		}
 	}
 	if (f == 0) {
 		for (;;) {
+			pthread_mutex_lock(&lock);
 			neuron_update_range(start, end, b);
 			brain_mutate(b);
+			pthread_mutex_unlock(&lock);
 			sleep(sleep_t);
 		}
 	}
 	if (f == 1) {
 		for (;;) {
+			pthread_mutex_lock(&lock);
 			neuron_accum(b->neurons[rand_int(0, b->nc - 1)], rand_int(1, 10));
+			pthread_mutex_unlock(&lock);
 			sleep(sleep_t);
 		}
 	}

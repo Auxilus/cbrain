@@ -33,10 +33,12 @@ void brain_mutate(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < 0.00000001) {
+		if (random < 0.0000001) {
 			int l = rand_int(0, b->neurons[i]->lc - 1);
-			b->neurons[i]->wts[l] = rand_int(1, 20);
-			cbrain_print(0, "mutated %d:%d with weight %d\n", i, b->neurons[i]->links[l], b->neurons[i]->wts[l]);
+			int original_wt = b->neurons[i]->wts[l];
+			int new_wt = rand_int(1, 20);
+			b->neurons[i]->wts[l] = new_wt;
+			cbrain_print(0, "mutated %d:%d from weight %d to %d\n", i, b->neurons[i]->links[l], original_wt, new_wt);
 		}
 	}
 }

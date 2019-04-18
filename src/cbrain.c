@@ -2,6 +2,11 @@
 
 int main(int argc, char* argv[])
 {
+	if (pthread_mutex_init(&lock, NULL) != 0) {
+		printf("mutex init failed\n");
+		return 1;
+	}
+	cbrain_print(0, "mutex iniotiated at %p\n", &lock);
 	srand(time(0));
 	if (argc < 2) {
 		printf("Number of neurons required\n");
