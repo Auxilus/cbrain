@@ -69,12 +69,12 @@ void* thread_func(void* args)
 	struct brain* b = ((struct thread_args*)args)->b;
 	if (f == -1) {
 		for (;;) {
-			pthread_mutex_lock(&lock);
 			for (int i = 0; i < (int)b->nc; i++) {
+				pthread_mutex_lock(&lock);
 				neuron_fire(b->neurons[i], b);
+				pthread_mutex_unlock(&lock);
 				sleep(sleep_t);
 			}
-			pthread_mutex_unlock(&lock);
 		}
 	}
 	if (f == 0) {
