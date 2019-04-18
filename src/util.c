@@ -8,6 +8,17 @@ int rand_int(int x, int y)
 	return num;
 }
 
+char* get_type_name(type t)
+{
+	switch(t) {
+		case undefined: return "undefined";
+		case sensory: return "sensory";
+		case intermediate: return "intermediate";
+		case motor: return "motor";
+		default: return "invalid type";
+	}
+}
+
 float rand_float(float min, float max)
 {
 	float random = ((float)rand()) / (float)RAND_MAX;

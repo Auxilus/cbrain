@@ -192,6 +192,16 @@ float brain_eval(struct brain* b, float max)
 	return 100 * accumulator / max;
 }
 
+void brain_neuron_type(struct brain* b, type t)
+{
+	printf("[%s]\n", get_type_name(t));
+	for (int i = 0; i < b->nc; i++) {
+		if (b->neurons[i]->n_type == t) {
+			printf("%d\n", b->neurons[i]->id);
+		}
+	}
+}
+
 void show_stat(struct neuron* n)
 {
 	printf("ID: %d  thisstate: %d  nextstate: %d ", n->id, n->thisstate, n->nextstate);

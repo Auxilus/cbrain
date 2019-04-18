@@ -74,6 +74,7 @@ struct thread_bank {
 struct brain* brain_init(int);
 void brain_mutate(struct brain*);
 float brain_eval(struct brain*, float);
+void brain_neuron_type(struct brain*, type);
 struct neuron* neuron_init(uint);
 void neuron_link(struct neuron*, struct neuron*, uint);
 void neuron_link_random(struct brain*);
@@ -93,6 +94,7 @@ int thread_create(struct nthread*, struct brain*, uint, uint);
 void* thread_func(void*);
 /*	src/util.c	*/
 int checkexist(uint, uint*, int);
+char* get_type_name(type);
 int rand_int(int, int);
 float rand_float(float, float);
 void save_brain(struct brain*, char*);
