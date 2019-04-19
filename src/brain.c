@@ -84,7 +84,9 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 void neuron_accum(struct neuron* n, uint wt)
 {
 	cbrain_print(2, "accumulating neuron %d with weight %d\n", n->id, wt);
+	pthread_mutex_lock(&lock);
 	n->nextstate += wt;
+	pthread_mutex_unlock(&lock);
 }
 
 int neuron_update(struct neuron* n, struct brain* b)

@@ -70,27 +70,21 @@ void* thread_func(void* args)
 	if (f == -1) {
 		for (;;) {
 			for (int i = 0; i < (int)b->nc; i++) {
-				pthread_mutex_lock(&lock);
 				neuron_fire(b->neurons[i], b);
-				pthread_mutex_unlock(&lock);
 				sleep(sleep_t);
 			}
 		}
 	}
 	if (f == 0) {
 		for (;;) {
-			pthread_mutex_lock(&lock);
 			neuron_update_range(start, end, b);
 			brain_mutate(b);
-			pthread_mutex_unlock(&lock);
 			sleep(sleep_t);
 		}
 	}
 	if (f == 1) {
 		for (;;) {
-			pthread_mutex_lock(&lock);
 			neuron_accum(b->neurons[rand_int(0, b->nc - 1)], rand_int(1, 10));
-			pthread_mutex_unlock(&lock);
 			sleep(sleep_t);
 		}
 	}

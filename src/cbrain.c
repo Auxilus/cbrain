@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 		printf("mutex init failed\n");
 		return 1;
 	}
-	cbrain_print(0, "mutex iniotiated at %p\n", &lock);
+	cbrain_print(0, "mutex initiated at %p\n", &lock);
 	srand(time(0));
 	if (argc < 2) {
 		printf("Number of neurons required\n");

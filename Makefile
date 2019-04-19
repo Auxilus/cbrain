@@ -1,7 +1,7 @@
 C_SOURCES = $(wildcard src/*.c)
 HEADERS   = $(wildcard src/*.h)
 OBJ = ${C_SOURCES:.c=.o}
-CFLAGS = -Wall -s -m32 -fno-stack-protector -fsingle-precision-constant -fno-unwind-tables -fno-asynchronous-unwind-tables -ffast-math -ffunction-sections -fdata-sections
+CFLAGS = -Wall
 
 all: cbrain
 
