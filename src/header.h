@@ -29,8 +29,13 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
+
+/* control constants */
 #define DEBUG 1
 #define THRESHOLD 20
+#define MAX_WT_DIFF 5
+#define SLEEP_T 0
+#define MUTATE_PROB 0.0000001
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;
