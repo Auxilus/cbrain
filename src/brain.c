@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "header.h"
 
+/* Initialize new neuron */
 struct neuron* neuron_init(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
@@ -38,6 +39,7 @@ struct neuron* neuron_init(uint id)
 	return n;
 }
 
+/* Link n to src with given weight */
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
@@ -81,6 +83,7 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 	}
 }
 
+/* accumulate passed weight to neuron's nextstate */
 void neuron_accum(struct neuron* n, uint wt)
 {
 	cbrain_print(2, "accumulating neuron %d with weight %d\n", n->id, wt);
@@ -89,6 +92,9 @@ void neuron_accum(struct neuron* n, uint wt)
 	pthread_mutex_unlock(&lock);
 }
 
+/* check if neuron's thisstate exceeds the threshold,
+ * fire the neuron if it does and reset thisstate, nextstate accordingly
+ */
 int neuron_update(struct neuron* n, struct brain* b)
 {
 	//if (DEBUG == 1) { show_stat(n); }
@@ -146,6 +152,7 @@ void neuron_add(struct brain* b)
 	
 }
 
+/* send respective weights to links */
 void neuron_fire(struct neuron* n, struct brain* b)
 {
 	cbrain_print(3, "firing neuron %d\n", n->id);
