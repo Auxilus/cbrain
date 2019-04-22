@@ -37,7 +37,7 @@ void brain_mutate(struct brain* b)
 			int l = rand_int(0, b->neurons[i]->lc - 1);
 			int original_wt = b->neurons[i]->wts[l];
 			int new_wt = rand_int(1, 20);
-			while (abs(new_wt - original_wt) > MAX_WT_DIFF) {
+			while ((abs(new_wt - original_wt) > MAX_WT_DIFF) && (new_wt != original_wt)) {
 				cbrain_print(2, "mutated weight [%d] exceeds MAX_WT_DIFF [%d], generating new weight\n", new_wt, MAX_WT_DIFF);
 				new_wt = rand_int(1, 20);
 			}
