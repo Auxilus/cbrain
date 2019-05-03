@@ -35,7 +35,9 @@ SOFTWARE.
 #define THRESHOLD 20
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
-#define MUTATE_PROB 0.0000001
+#define MUTATE_PROB 0.0001
+#define WEIGHT_MIN 1
+#define WEIGHT_MAX 20
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;

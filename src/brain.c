@@ -61,7 +61,7 @@ void neuron_link_random(struct brain* b)
 		for (int j = 0; j < 10; j++) {
 			uint id = (uint)rand_int(0, b->nc - 1);
 			if (!(id == b->neurons[i]->id) && (checkexist(id, b->neurons[i]->links, b->neurons[i]->lc) == -1)) {
-				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(1, 20));
+				neuron_link(b->neurons[i], b->neurons[(int)id], rand_int(WEIGHT_MIN, WEIGHT_MAX));
 			}
 		}
 	}
@@ -146,7 +146,7 @@ void neuron_add(struct brain* b)
 		uint id = (uint)rand_int(0, b->nc - 1);
 		if (!(id == n->id) && (checkexist(id, n->links, n->lc) == -1)) {
 			cbrain_print(1, "linking %d to %d with weight\n", id, n->id);
-			neuron_link(n, b->neurons[(int)id], rand_int(1, 20));
+			neuron_link(n, b->neurons[(int)id], rand_int(WEIGHT_MIN, WEIGHT_MAX));
 		}
 	}
 	
