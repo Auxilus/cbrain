@@ -14,16 +14,21 @@ int main(int argc, char* argv[])
 	}
 	int neurons_no = atoi(argv[1]);
 	uint sleep_t;
-	sleep_t = (argc < 3) ? SLEEP_T : atoi(argv[2]);
+	sleep_t = (argc < 3) ? SLEEP_T : strtof(argv[2], NULL);
 
-	struct brain* b = brain_init((uint)neurons_no);
-	neuron_link_random(b);
-	cbrain_print(0, "%d neurons generated and randomly linked\n", neurons_no);
-	struct nthread* nt1 = thread_struct_new(0, neurons_no-1);
-	struct nthread* at  = thread_struct_new(0, 0);
-	thread_create(nt1, b, 0, sleep_t);
-	thread_create(at, b, 1, sleep_t);
-	pthread_join(nt1->tid, NULL);
-	pthread_join(at->tid, NULL);
+	struct brain* b = parse_model_csv("src/models/conn.txt");
+
+	//struct brain* b = brain_init((uint)neurons_no);
+	//neuron_link_random(b);
+	cbrain_print(0, "%d neurons generated and randomly linked\n", b->nc);
+	neuron_fire(b->neurons[172], b);
+	neuron_fire(b->neurons[173], b);
+	neuron_update_range(0, 499, b);
+	//struct nthread* nt1 = thread_struct_new(0, neurons_no-1);
+	//thread_create(nt1, b, 0, sleep_t);
+	//struct nthread* at  = thread_struct_new(0, 0);
+	//thread_create(at, b, 1, sleep_t);
+	//pthread_join(nt1->tid, NULL);
+	//pthread_join(at->tid, NULL);
 	return 0;
 }

@@ -29,13 +29,12 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 
-
 /* control constants */
-#define DEBUG 1
+#define DEBUG 4
 #define THRESHOLD 20
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
-#define MUTATE_PROB 0.0001
+#define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
 
@@ -120,4 +119,5 @@ void save_brain(struct brain*, char*);
 struct brain* gen_brain(char*);
 int file_num_lines(char*);
 int cbrain_print(int, const char*, ...)__attribute__((format(printf, 2, 3)));
+struct brain* parse_model_csv(char*);
 #endif

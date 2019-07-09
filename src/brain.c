@@ -161,6 +161,7 @@ void neuron_fire(struct neuron* n, struct brain* b)
 	for (int i = 0; i < p; i++) {
 		assert(n->links[i] <= (b->nc - 1));
 		assert(n->wts[i]);
+		cbrain_print(4, "sending weight to %d\n", n->links[i]);
 		b->neurons[n->links[i]]->nextstate += n->wts[i];
 	}
 }

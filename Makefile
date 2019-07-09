@@ -1,5 +1,6 @@
 C_SOURCES = $(wildcard src/*.c)
 HEADERS   = $(wildcard src/*.h)
+HEADERS	  += $(wildcard src/models/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 CFLAGS = -Wall
 CC=gcc

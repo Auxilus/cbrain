@@ -94,3 +94,26 @@ int cbrain_print(int level, const char* str, ...)
 	}
 	return 0;
 }
+
+struct brain* parse_model_csv(char* file)
+{
+	struct brain* b = brain_init(500);
+	FILE* f = fopen(file, "r");
+	if (f == NULL) {
+		printf("failed to load file %s\n", file);
+		exit(1);
+	}
+	char line[64];
+
+	while (fgets(line, sizeof(line), f)) {
+		char* token = strtok(line, "£");
+		int src = atoi(strtok(line, ","));
+		int dst = atoi(strtok(NULL, ","));
+		int wt = atoi(strtok(NULL, ","));
+		cbrain_print(1, "adding neuron link %d -> %d : %d\n", src, dst, wt);
+		neuron_link(b->neurons[src], b->neurons[dst], wt);
+		token++;
+	}
+	fclose(f);
+	return b;
+}
