@@ -8,11 +8,11 @@ int main(int argc, char* argv[])
 	}
 	cbrain_print(0, "mutex initiated at %p\n", &lock);
 	srand(time(0));
-	if (argc < 2) {
-		printf("Number of neurons required\n");
-		exit(1);
-	}
-	int neurons_no = atoi(argv[1]);
+	//if (argc < 2) {
+	//	printf("Number of neurons required\n");
+	//	exit(1);
+	//}
+	//int neurons_no = atoi(argv[1]);
 	uint sleep_t;
 	sleep_t = (argc < 3) ? SLEEP_T : strtof(argv[2], NULL);
 
@@ -20,10 +20,22 @@ int main(int argc, char* argv[])
 
 	//struct brain* b = brain_init((uint)neurons_no);
 	//neuron_link_random(b);
-	cbrain_print(0, "%d neurons generated and randomly linked\n", b->nc);
-	neuron_fire(b->neurons[172], b);
-	neuron_fire(b->neurons[173], b);
-	neuron_update_range(0, 499, b);
+	//cbrain_print(0, "%d neurons generated and randomly linked\n", b->nc);
+	// run an infinite loop which gives food to c elegans
+	for (;;) {
+		neuron_fire(b->neurons[4], b);
+		neuron_fire(b->neurons[5], b);
+		neuron_fire(b->neurons[42], b);
+		neuron_fire(b->neurons[41], b);
+		neuron_fire(b->neurons[45], b);
+		neuron_fire(b->neurons[46], b);
+		neuron_fire(b->neurons[48], b);
+		neuron_fire(b->neurons[76], b);
+		neuron_fire(b->neurons[77], b);
+		neuron_fire(b->neurons[72], b);
+		neuron_fire(b->neurons[73], b);
+		neuron_update_range(0, 499, b);
+	}
 	//struct nthread* nt1 = thread_struct_new(0, neurons_no-1);
 	//thread_create(nt1, b, 0, sleep_t);
 	//struct nthread* at  = thread_struct_new(0, 0);

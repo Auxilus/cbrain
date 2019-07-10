@@ -107,6 +107,8 @@ int neuron_update(struct neuron* n, struct brain* b)
 		n->n_fired += 1;
 	}
 	n->thisstate += n->nextstate;
+	// thisstate less than zero is not possible
+	assert(n->thisstate >= 0);
 	n->nextstate = 0;
 	n->fired     = 0;
 	return n->fired;
