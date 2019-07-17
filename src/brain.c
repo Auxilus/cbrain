@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "header.h"
+#include "cbrain.h"
 
 /* Initialize new neuron */
 struct neuron* neuron_init(uint id)

@@ -5,12 +5,9 @@ Simple implementation of neural structure in c.
 
 <code>git clone https://github.com/Auxilus/cbrain</code>
 
-the main() lies in src/cbrain.c
-make your changes to main()
-
 <code>make</code>
 
-<code>./cbrain <number_of_neurons></code>
-
+This will generate shared object **libcbrain.so**
+You need to copy **libcbrain.so** and **src/cbrain.h** over to lib and include dirs
 
 All the bugs and PRs are welcome!

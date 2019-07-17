@@ -1,4 +1,4 @@
-#include "header.h"
+#include <cbrain.h>
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	uint sleep_t;
 	sleep_t = (argc < 3) ? SLEEP_T : strtof(argv[2], NULL);
 
-	struct brain* b = parse_model_csv("src/models/conn.txt");
+	struct brain* b = parse_model_csv("models/conn.txt");
 
 	//struct brain* b = brain_init((uint)neurons_no);
 	//neuron_link_random(b);

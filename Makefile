@@ -1,19 +1,18 @@
 C_SOURCES = $(wildcard src/*.c)
 HEADERS   = $(wildcard src/*.h)
-HEADERS	  += $(wildcard src/models/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 CFLAGS = -Wall
 CC=gcc
 
-all: cbrain
+all: libcbrain.so
 
 %.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS) -fPIC
 
-cbrain: ${OBJ}
-	$(CC) $^ -o $@ -lpthread $(CFLAGS)
-	strip -S --strip-unneeded --remove-section=.note.gnu.gold-version --remove-section=.comment --remove-section=.note --remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag $@
+libcbrain.so: ${OBJ}
+	$(CC) -shared -o $@ -lpthread $(CFLAGS) $^
 
 clean:
-	rm cbrain
 	rm src/*.o
+	rm libcbrain.so
+

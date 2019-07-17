@@ -1,4 +1,4 @@
-#include "header.h"
+#include "cbrain.h"
 #include <stdarg.h>
 
 int rand_int(int x, int y) 
