@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 		neuron_fire(b->neurons[72], b);
 		neuron_fire(b->neurons[73], b);
 		neuron_update_range(0, 499, b);
+		sleep(1);
 	}
 	//struct nthread* nt1 = thread_struct_new(0, neurons_no-1);
 	//thread_create(nt1, b, 0, sleep_t);
