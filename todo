@@ -4,8 +4,6 @@ TODO
   communicate over network to simulate a single brain
 - Add load balancer to decide sleep time, how many neurons each thread should process
   based on the b->nc and current cpu usage
-- CSV parser to generate brain from a CSV file
-- Add function for evaluating the brain
 
 DONE
 - Add command line argument parser
@@ -15,3 +13,5 @@ DONE
 - Add random brain mutation
 - Add neuron types: sensory, motor, intermediate
 - Add function to add extra neurons and link them with existing neurons
+- CSV parser to generate brain from a CSV file
+- Add function for evaluating the brain
