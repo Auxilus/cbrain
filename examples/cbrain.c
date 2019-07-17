@@ -1,4 +1,4 @@
-#include <cbrain.h>
+#include "../src/cbrain.h"
 
 int main(int argc, char* argv[])
 {
