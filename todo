@@ -1,4 +1,5 @@
 TODO
+- Update save_brain for csv format
 - Add free neuron function to delete neurons
 - Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
