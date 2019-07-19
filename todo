@@ -1,5 +1,4 @@
 TODO
-- Update save_brain for csv format
 - Add free neuron function to delete neurons
 - Add sim sharing support so that multiple devices can 
   communicate over network to simulate a single brain
@@ -17,3 +16,4 @@ DONE
 - Add function to add extra neurons and link them with existing neurons
 - CSV parser to generate brain from a CSV file
 - Add function for evaluating the brain
+- Update save_brain for csv format
