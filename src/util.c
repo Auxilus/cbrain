@@ -57,9 +57,27 @@ int file_num_lines(char* filename)
 void save_brain(struct brain* b, char* filename)
 {
 	FILE* file = fopen(filename, "wb");
+	cbrain_print(1, "saving brain to file %s\n", filename);
 	if (file) {
-		fwrite(b, sizeof(struct brain), 1, file);
+		for (int i = 0; i < b->nc; i++) {
+			for (int j = 0; j < b->neurons[i]->lc; j++) {
+				char tmp[sizeof(int)];
+				char str[15];
+				sprintf(str, "%d", i);
+				strcat(str, ", ");
+				sprintf(tmp, "%d", b->neurons[i]->links[j]);
+				strcat(str, tmp);
+				strcat(str, ", ");
+				sprintf(tmp, "%d", b->neurons[i]->wts[j]);
+				strcat(str, tmp);
+				strcat(str, "\n");
+				fwrite(str, sizeof(char), strlen(str), file);
+			}
+		}
 		fclose(file);
+	} else {
+		printf("unable to open file\n");
+		exit(1);
 	}
 }
 
