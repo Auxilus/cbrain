@@ -3,8 +3,6 @@
 int main(int argc, char* argv[])
 {
 	struct brain* b = parse_model_csv("models/conn.txt");
-	save_brain(b, "data.csv");
-	exit(1);
 
 	for (;;) {
 		neuron_fire(b->neurons[4], b);
