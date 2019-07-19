@@ -16,6 +16,7 @@ libcbrain.so: ${OBJ}
 clean:
 	rm src/*.o
 	rm libcbrain.so
+
 install: libcbrain.so
 	install -m 777 $^ ${PREFIX}/lib/
 	install -m 777 src/cbrain.h ${PREFIX}/include
