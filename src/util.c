@@ -61,16 +61,8 @@ void save_brain(struct brain* b, char* filename)
 	if (file) {
 		for (int i = 0; i < b->nc; i++) {
 			for (int j = 0; j < b->neurons[i]->lc; j++) {
-				char tmp[sizeof(int)];
 				char str[15];
-				sprintf(str, "%d", i);
-				strcat(str, ", ");
-				sprintf(tmp, "%d", b->neurons[i]->links[j]);
-				strcat(str, tmp);
-				strcat(str, ", ");
-				sprintf(tmp, "%d", b->neurons[i]->wts[j]);
-				strcat(str, tmp);
-				strcat(str, "\n");
+				sprintf(str, "%d, %d, %d\n", i, b->neurons[i]->links[j], b->neurons[i]->wts[j]);
 				fwrite(str, sizeof(char), strlen(str), file);
 			}
 		}
