@@ -28,6 +28,7 @@ SOFTWARE.
 #include <string.h>
 #include <assert.h>
 #include <pthread.h>
+#include <SDL2/SDL.h>
 
 /* control constants */
 #define DEBUG 4
@@ -85,6 +86,11 @@ struct thread_bank {
 	struct nthread** threads;
 } thread_bank;
 
+struct sdlctx {
+	SDL_Window* win;
+	SDL_Renderer* ren;
+} sdlctx;
+
 /*	src/brain.c	*/
 struct brain* brain_init(int);
 void brain_neuron_type(struct brain*, type);
@@ -120,4 +126,10 @@ struct brain* gen_brain(char*);
 int file_num_lines(char*);
 int cbrain_print(int, const char*, ...)__attribute__((format(printf, 2, 3)));
 struct brain* parse_model_csv(char*);
+/*	src/render.c	*/
+struct sdlctx* render_init(void);
+void render_handle_events(struct sdlctx*);
+void render_update(struct sdlctx*);
+void render_draw(struct sdlctx*);
+void render_cleanup(struct sdlctx*);
 #endif

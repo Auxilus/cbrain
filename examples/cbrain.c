@@ -3,9 +3,10 @@
 int main(int argc, char* argv[])
 {
 	struct brain* b = parse_model_csv("models/conn.txt");
-	save_brain(b, "brain.txt");
-	exit(1);
+	struct sdlctx* ctx = render_init();
 	for (;;) {
+		render_handle_events(ctx);
+		render_draw(ctx);
 		neuron_fire(b->neurons[4], b);
 		neuron_fire(b->neurons[5], b);
 		neuron_fire(b->neurons[42], b);
