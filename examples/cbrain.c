@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
 		neuron_fire(b->neurons[72], b);
 		neuron_fire(b->neurons[73], b);
 		neuron_update_range(0, 499, b);
+		sleep(1);
 	}
 	return 0;
 }

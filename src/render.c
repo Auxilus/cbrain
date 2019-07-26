@@ -2,13 +2,18 @@
 
 struct sdlctx* render_init()
 {
-	struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
-	ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_SHOWN);
-	printf("%s\n", SDL_GetError());
-	ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
-	printf("%s\n", SDL_GetError());
-	printf("%p %p\n", ctx->win, ctx->ren);
-	return ctx;
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		printf("SDL_Init failed: %s\n", SDL_GetError());
+		exit(1);
+	} else {
+		struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
+		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_SHOWN);
+		printf("%s\n", SDL_GetError());
+		ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
+		printf("%s\n", SDL_GetError());
+		printf("%p %p\n", ctx->win, ctx->ren);
+		return ctx;
+	}
 }
 
 void render_handle_events(struct sdlctx* ctx)

@@ -32,7 +32,7 @@ SOFTWARE.
 #include <SDL2/SDL.h>
 
 /* control constants */
-#define DEBUG 3
+#define DEBUG 0
 #define THRESHOLD 20
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
