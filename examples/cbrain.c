@@ -4,9 +4,11 @@ int main(int argc, char* argv[])
 {
 	struct brain* b = parse_model_csv("models/conn.txt");
 	struct sdlctx* ctx = render_init();
+	struct entityctx* ec = render_spawn(300, 347, 347, 395);
 	for (;;) {
 		render_handle_events(ctx);
-		render_draw(ctx);
+		render_update(ctx, ec, b);
+		render_draw(ctx, ec);
 		neuron_fire(b->neurons[4], b);
 		neuron_fire(b->neurons[5], b);
 		neuron_fire(b->neurons[42], b);
@@ -19,7 +21,6 @@ int main(int argc, char* argv[])
 		neuron_fire(b->neurons[72], b);
 		neuron_fire(b->neurons[73], b);
 		neuron_update_range(0, 499, b);
-		sleep(1);
 	}
 	return 0;
 }

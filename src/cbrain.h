@@ -28,16 +28,19 @@ SOFTWARE.
 #include <string.h>
 #include <assert.h>
 #include <pthread.h>
+#include <math.h>
 #include <SDL2/SDL.h>
 
 /* control constants */
-#define DEBUG 4
+#define DEBUG 3
 #define THRESHOLD 20
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
 #define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
+
+#define RADTODEG 57.2957
 
 typedef unsigned int uint;
 typedef enum {undefined, sensory, intermediate, motor} type;
@@ -91,6 +94,23 @@ struct sdlctx {
 	SDL_Renderer* ren;
 } sdlctx;
 
+struct vect {
+	float x;
+	float y;
+} vect;
+
+struct entityctx {
+	int mlstart;
+	int mrstart;
+	int mlend;
+	int mrend;
+	int width;
+	int height;
+	float rot;
+	float x;
+	float y;
+} entityctx;
+
 /*	src/brain.c	*/
 struct brain* brain_init(int);
 void brain_neuron_type(struct brain*, type);
@@ -129,7 +149,8 @@ struct brain* parse_model_csv(char*);
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
 void render_handle_events(struct sdlctx*);
-void render_update(struct sdlctx*);
-void render_draw(struct sdlctx*);
+void render_update(struct sdlctx*, struct entityctx*, struct brain*);
+void render_draw(struct sdlctx*, struct entityctx*);
 void render_cleanup(struct sdlctx*);
+struct entityctx* render_spawn(int, int, int, int);
 #endif
