@@ -7,7 +7,7 @@ struct sdlctx* render_init()
 		exit(1);
 	} else {
 		struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
-		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_SHOWN);
+		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_SHOWN);
 		printf("%s\n", SDL_GetError());
 		ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
 		printf("%s\n", SDL_GetError());
@@ -23,6 +23,11 @@ void render_handle_events(struct sdlctx* ctx)
 	switch (event.type) {
 		case SDL_QUIT:
 			render_cleanup(ctx);
+			break;
+		case SDL_KEYDOWN:
+			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "Q") == 0) {
+				render_cleanup(ctx);
+			}
 			break;
 	}
 }
@@ -121,17 +126,13 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec)
 
 void render_cleanup(struct sdlctx* ctx)
 {
+	printf("Quitting...\n");
 	SDL_DestroyWindow(ctx->win);
 	SDL_DestroyRenderer(ctx->ren);
 	SDL_Quit();
+	exit(1);
 }
 
-/*
- * mlc: left muscle count
- * mrc: right muscle counit
- * mus_left: left muscle ids
- * mus_right: right muscle ids
- */
 struct entityctx* render_spawn(int mls, int mrs, int mle, int mre)
 {
 	struct entityctx* ec = (struct entityctx*)malloc(sizeof(struct entityctx));
