@@ -1,13 +1,13 @@
 #include "cbrain.h"
 
-struct jar* jar_init(int b_count)
+struct jar* jar_init(int b_count, int nc)
 {
 	struct jar* j = (struct jar*)malloc(sizeof(struct jar));
 	j->bc = b_count;
 	j->bmax = b_count * 2;
 	j->brains = (struct brain**)malloc(sizeof(struct brain) * j->bc);
 	for (int i = 0; i < b_count; i++) {
-		j->brains[i] = brain_init(rand_int(2, 1000));
+		j->brains[i] = brain_init(nc);
 	}
 	j->fittest = (struct brain*)malloc(sizeof(struct brain));
 	j->fittest = brain_init(-1);

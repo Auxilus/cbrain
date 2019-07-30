@@ -127,7 +127,7 @@ void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void show_stat(struct neuron*);
 /*	src/jar.c	*/
-struct jar* jar_init(int);
+struct jar* jar_init(int, int);
 void jar_update(struct jar*);
 void brain_mutate(struct brain*);
 void brain_eval(struct brain*, float);
