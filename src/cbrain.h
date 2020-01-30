@@ -131,6 +131,7 @@ struct jar* jar_init(int, int);
 void jar_update(struct jar*);
 void brain_mutate(struct brain*);
 void brain_eval(struct brain*, float);
+void brain_eval_range(struct brain*, int, int, float);
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);

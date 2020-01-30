@@ -51,6 +51,19 @@ void brain_mutate(struct brain* b)
 	}
 }
 
+/* eval only selected neurons for fitness */
+void brain_eval_range(struct brain* b, int n_start, int n_end, float max)
+{
+	int accumulator = 0;
+	for (int i = n_start; i <= n_end; i++) {
+		if (b->neurons[i]->n_type == motor) {
+			accumulator += b->neurons[i]->thisstate;
+		}
+	}
+	float fit = 100 * accumulator / max;
+	b->fitness = fit;
+}
+
 void brain_eval(struct brain* b, float max)
 {
 	int accumulator = 0;
