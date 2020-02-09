@@ -19,7 +19,7 @@ void jar_update(struct jar* j)
 	for (int i = 0; i < j->bc; i++) {
 		neuron_update_range(0, j->brains[i]->nc - 1, j->brains[i]);
 		//brain_eval(0);
-		brain_mutate(j->brains[i]);
+		brain_mutate(j->brains[i], false);
 	}
 
 	for (int k = 0; k < j->bc; k++) {
@@ -29,11 +29,11 @@ void jar_update(struct jar* j)
 	}
 }
 
-void brain_mutate(struct brain* b)
+void brain_mutate(struct brain* b, bool force_mutate)
 {
 	for (int i = 0; i < b->nc; i++) {
 		float random = rand_float(0, 1);
-		if (random < MUTATE_PROB) {
+		if (random < MUTATE_PROB || force_mutate) {
 			int l = rand_int(0, b->neurons[i]->lc - 1);
 			int original_wt = b->neurons[i]->wts[l];
 			int new_wt = rand_int(WEIGHT_MIN, WEIGHT_MAX);

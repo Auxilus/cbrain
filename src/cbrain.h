@@ -29,6 +29,7 @@ SOFTWARE.
 #include <assert.h>
 #include <pthread.h>
 #include <math.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 
 /* control constants */
@@ -129,7 +130,7 @@ void show_stat(struct neuron*);
 /*	src/jar.c	*/
 struct jar* jar_init(int, int);
 void jar_update(struct jar*);
-void brain_mutate(struct brain*);
+void brain_mutate(struct brain*, bool);
 void brain_eval(struct brain*, float);
 void brain_eval_range(struct brain*, int, int, float);
 /*	src/thread.c	*/
@@ -149,7 +150,7 @@ int cbrain_print(int, const char*, ...)__attribute__((format(printf, 2, 3)));
 struct brain* parse_model_csv(char*);
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
-void render_handle_events(struct sdlctx*);
+void render_handle_events(struct sdlctx*, struct brain*);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*);
 void render_cleanup(struct sdlctx*);

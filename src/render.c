@@ -16,7 +16,7 @@ struct sdlctx* render_init()
 	}
 }
 
-void render_handle_events(struct sdlctx* ctx)
+void render_handle_events(struct sdlctx* ctx, struct brain* b)
 {
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -28,6 +28,30 @@ void render_handle_events(struct sdlctx* ctx)
 			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "Q") == 0) {
 				render_cleanup(ctx);
 			}
+			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "T") == 0) {
+				neuron_fire(b->neurons[8], b);
+				neuron_fire(b->neurons[9], b);
+				printf("stimulating temperature sensor\n");
+			}
+			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "F") == 0) {
+				neuron_fire(b->neurons[4], b);
+				neuron_fire(b->neurons[5], b);
+				neuron_fire(b->neurons[42], b);
+				neuron_fire(b->neurons[41], b);
+				neuron_fire(b->neurons[45], b);
+				neuron_fire(b->neurons[46], b);
+				neuron_fire(b->neurons[48], b);
+				neuron_fire(b->neurons[76], b);
+				neuron_fire(b->neurons[77], b);
+				neuron_fire(b->neurons[72], b);
+				neuron_fire(b->neurons[73], b);
+				printf("giving food\n");
+			}
+			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "M") == 0) {
+				//brain_mutate(b, true);
+				printf("mutating brain\n");
+			}
+
 			break;
 	}
 }
@@ -53,8 +77,7 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	}
 
 	float speed = acc_right + acc_left;
-	speed = speed/200.0 * 3.0;
-	printf("\rspeed: %f\n", speed);
+	speed = speed / 200.0;
 
 	if (acc_right > acc_left) {
 		ec->rot -= 5.0;
