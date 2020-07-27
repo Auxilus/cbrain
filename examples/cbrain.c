@@ -3961,8 +3961,6 @@ int main(int argc, char* argv[])
 	neuron_link(b->neurons[VD9], b->neurons[VD10], 5);
 	struct sdlctx* ctx = render_init();
 	struct entityctx* ec = render_spawn(300, 347, 347, 395);
-	int ctr = 0;
-	int ittr = 0;
 	for (;;) {
 		b->neurons[MVULVA]->thisstate = 0;
 		render_handle_events(ctx, b);
@@ -3989,7 +3987,6 @@ int main(int argc, char* argv[])
 		render_draw(ctx, ec);
 		neuron_update_range(0, 399, b);
 		usleep(20000);
-		ittr += 1;
 	}
 	return 0;
 }

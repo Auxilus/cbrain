@@ -49,7 +49,7 @@ typedef enum {undefined, sensory, intermediate, motor} type;
 pthread_mutex_t lock;
 
 struct neuron {
-	uint id;
+	int id;
 	int *links;
 	int *wts;
 	uint lc;
@@ -58,7 +58,7 @@ struct neuron {
 
 	float thisstate;
 	float nextstate;
-	uint fired;	/*0:false 1:true*/
+	uint fired;
 	uint n_fired;
 } neuron;
 
@@ -123,21 +123,23 @@ void neuron_accum(struct neuron*, uint);
 void neuron_fire(struct neuron*, struct brain*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
-void neuron_free(struct neuron*, struct neuron*);
 void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void show_stat(struct neuron*);
+
 /*	src/jar.c	*/
 struct jar* jar_init(int, int);
 void jar_update(struct jar*);
 void brain_mutate(struct brain*, bool);
 void brain_eval(struct brain*, float);
 void brain_eval_range(struct brain*, int, int, float);
+
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
 struct nthread* thread_struct_new(uint, uint);
 int thread_create(struct nthread*, struct brain*, uint, uint);
 void* thread_func(void*);
+
 /*	src/util.c	*/
 int checkexist(int, int*, int);
 char* get_type_name(type);
@@ -148,6 +150,7 @@ struct brain* gen_brain(char*);
 int file_num_lines(char*);
 int cbrain_print(int, const char*, ...)__attribute__((format(printf, 2, 3)));
 struct brain* parse_model_csv(char*);
+
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
 void render_handle_events(struct sdlctx*, struct brain*);

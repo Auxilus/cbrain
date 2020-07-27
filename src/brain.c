@@ -29,8 +29,8 @@ struct neuron* neuron_init(uint id)
 	n->id = id;
 	n->lc = 0;
 	n->lmax = 100;
-	n->links = (int*)malloc(sizeof(int) * n->lmax);
-	n->wts = (int*)malloc(sizeof(int) * n->lmax);
+	n->links = (int*)malloc(400); /* sizeof(int) * n->lmax */
+	n->wts = (int*)malloc(400);   /* |----4----| * |-100-| */
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
 	n->fired     = 0;
@@ -117,10 +117,11 @@ int neuron_update(struct neuron* n, struct brain* b)
 		n->nextstate = 0;
 		n->fired = 1;
 		n->n_fired += 1;
+	} else {
+		n->thisstate += n->nextstate;
+		n->nextstate = 0;
+		n->fired     = 0;
 	}
-	n->thisstate += n->nextstate;
-	n->nextstate = 0;
-	n->fired     = 0;
 	return n->fired;
 }
 

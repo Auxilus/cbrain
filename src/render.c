@@ -54,7 +54,7 @@ void render_handle_events(struct sdlctx* ctx, struct brain* b)
 				printf("giving food\n");
 			}
 			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "M") == 0) {
-				//brain_mutate(b, true);
+				// brain_mutate(b, true);
 				printf("mutating brain\n");
 			}
 
@@ -69,8 +69,8 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	printf("x: %f y: %f\n", ec->x, ec->y);
 	if (ec->x <= 0) { ec->x = 0; collision = 1; }
 	if (ec->y <= 0) { ec->y = 0; collision = 1; }
-	if (ec->x >= (600 - ec->height)) { ec->x = 600-ec->height; collision = 1; }
-	if (ec->y >= (400 - ec->height)) { ec->y = 400-ec->height; collision = 1; }
+	if (ec->x >= (600 - ec->height)) { /*ec->x = 600-ec->height;*/ collision = 1; }
+	if (ec->y >= (400 - ec->height)) { /*ec->y = 400-ec->height;*/ collision = 1; }
 	if (collision) {
 		neuron_fire(b->neurons[111], b);
 		neuron_fire(b->neurons[112], b);
@@ -100,7 +100,7 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	}
 
 	float speed = acc_right + acc_left;
-	speed = speed / 200.0;
+	speed = speed / 150.0;
 
 	if (acc_right > acc_left) {
 		ec->rot -= 5.0;

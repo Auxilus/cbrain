@@ -104,6 +104,7 @@ int cbrain_print(int level, const char* str, ...)
 	if (level <= DEBUG) {
 		vfprintf(stdout, str, list);
 	}
+	va_end(list);
 	return 0;
 }
 
