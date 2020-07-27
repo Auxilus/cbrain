@@ -29,10 +29,10 @@ struct neuron* neuron_init(uint id)
 	n->id = id;
 	n->lc = 0;
 	n->lmax = 100;
-	n->links = (uint*)malloc(sizeof(uint) * n->lmax);
-	n->wts = (uint*)malloc(sizeof(uint) * n->lmax);
-	n->thisstate = 0;
-	n->nextstate = 0;
+	n->links = (int*)malloc(sizeof(int) * n->lmax);
+	n->wts = (int*)malloc(sizeof(int) * n->lmax);
+	n->thisstate = 0.0;
+	n->nextstate = 0.0;
 	n->fired     = 0;
 	n->n_fired   = 0;
 	n->n_type   = undefined;
@@ -42,12 +42,13 @@ struct neuron* neuron_init(uint id)
 /* Link n to src with given weight */
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
+	printf("linking neuron %d to %d with %d\n", src->id, n->id, wt);
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
 			cbrain_print(2, "reallocating memory... nid: %u\n", src->id);
-			src->links = (uint*)realloc(src->links, sizeof(uint) * src->lmax);
-			src->wts = (uint*)realloc(src->wts, sizeof(uint) * src->lmax);
+			src->links = (int*)realloc(src->links, sizeof(int) * src->lmax);
+			src->wts = (int*)realloc(src->wts, sizeof(int) * src->lmax);
 		}
 		src->links[src->lc] = n->id;
 		src->wts[src->lc] = wt;
@@ -100,15 +101,24 @@ int neuron_update(struct neuron* n, struct brain* b)
 	//if (DEBUG == 1) { show_stat(n); }
 	assert(n->id <= (b->nc - 1));
 	if (n->thisstate >= THRESHOLD) {
-		neuron_fire(n, b);
+		cbrain_print(3, "firing neuron %d\n", n->id);
+		for (int i = 0; i < n->lc; i++) {
+			assert(n->links[i] <= (b->nc - 1));
+			assert(n->wts[i]);
+			cbrain_print(4, "sending weight %d to %d\n", n->wts[i], n->links[i]);
+			float past = b->neurons[n->links[i]]->nextstate;
+			b->neurons[n->links[i]]->nextstate += n->wts[i];
+			if (b->neurons[n->links[i]]->nextstate > 1000) {
+				cbrain_print(2, "faulty fire from %d to %d [%d] (is %f was %f)\n", n->id, n->links[i], n->wts[i], b->neurons[n->links[i]]->nextstate, past);
+				exit(-1);
+			}
+		}
 		n->thisstate = 0;
 		n->nextstate = 0;
 		n->fired = 1;
 		n->n_fired += 1;
 	}
 	n->thisstate += n->nextstate;
-	// thisstate less than zero is not possible
-	assert(n->thisstate >= 0);
 	n->nextstate = 0;
 	n->fired     = 0;
 	return n->fired;
@@ -157,15 +167,7 @@ void neuron_add(struct brain* b)
 /* send respective weights to links */
 void neuron_fire(struct neuron* n, struct brain* b)
 {
-	cbrain_print(3, "firing neuron %d\n", n->id);
-	int p;
-	p = n->lc;
-	for (int i = 0; i < p; i++) {
-		assert(n->links[i] <= (b->nc - 1));
-		assert(n->wts[i]);
-		cbrain_print(4, "sending weight to %d\n", n->links[i]);
-		b->neurons[n->links[i]]->nextstate += n->wts[i];
-	}
+	n->thisstate = THRESHOLD;
 }
 
 struct brain* brain_init(int s)
@@ -194,7 +196,7 @@ void brain_neuron_type(struct brain* b, type t)
 
 void show_stat(struct neuron* n)
 {
-	printf("ID: %d  thisstate: %d  nextstate: %d ", n->id, n->thisstate, n->nextstate);
+	printf("ID: %d  thisstate: %f  nextstate: %f", n->id, n->thisstate, n->nextstate);
 	for (int i = 0; i < n->lc; i++) {
 		printf("%u:%u ", n->links[i], n->wts[i]);
 	}

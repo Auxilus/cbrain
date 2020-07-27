@@ -16,6 +16,12 @@ struct sdlctx* render_init()
 	}
 }
 
+SDL_Event render_get_event()
+{
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	return event;
+}
 void render_handle_events(struct sdlctx* ctx, struct brain* b)
 {
 	SDL_Event event;
@@ -58,20 +64,37 @@ void render_handle_events(struct sdlctx* ctx, struct brain* b)
 
 void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
+	// check for collision
+	int collision = 0;
+	printf("x: %f y: %f\n", ec->x, ec->y);
+	if (ec->x <= 0) { ec->x = 0; collision = 1; }
+	if (ec->y <= 0) { ec->y = 0; collision = 1; }
+	if (ec->x >= (600 - ec->height)) { ec->x = 600-ec->height; collision = 1; }
+	if (ec->y >= (400 - ec->height)) { ec->y = 400-ec->height; collision = 1; }
+	if (collision) {
+		neuron_fire(b->neurons[111], b);
+		neuron_fire(b->neurons[112], b);
+		neuron_fire(b->neurons[43], b);
+		neuron_fire(b->neurons[44], b);
+		neuron_fire(b->neurons[127], b);
+		neuron_fire(b->neurons[128], b);
+		neuron_fire(b->neurons[151], b);
+		neuron_fire(b->neurons[152], b);
+		neuron_fire(b->neurons[153], b);
+		neuron_fire(b->neurons[154], b);
+	}
 	int acc_right = 0;
 	int acc_left = 0;
 	float dx = 0;
 	float dy = 0;
 	for (int i = ec->mrstart; i < ec->mrend; i++) {
-		int st = b->neurons[i]->thisstate;
-		assert(st > -100);
-		acc_right += st;
+		acc_right += b->neurons[i]->thisstate;
+		cbrain_print(2, "reducing thisstate for %d from %f to %f\n", b->neurons[i]->id, b->neurons[i]->thisstate, b->neurons[i]->thisstate*0.7);
 		b->neurons[i]->thisstate *= 0.7;
 	}
 
 	for (int i = ec->mlstart; i < ec->mlend; i++) {
 		int st = b->neurons[i]->thisstate;
-		assert(st > -100);
 		acc_left += st;
 		b->neurons[i]->thisstate *= 0.7;
 	}

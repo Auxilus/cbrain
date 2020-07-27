@@ -34,7 +34,7 @@ SOFTWARE.
 
 /* control constants */
 #define DEBUG 0
-#define THRESHOLD 20
+#define THRESHOLD 20.0
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
 #define MUTATE_PROB 0.00001
@@ -50,14 +50,14 @@ pthread_mutex_t lock;
 
 struct neuron {
 	uint id;
-	uint *links;
-	uint *wts;
+	int *links;
+	int *wts;
 	uint lc;
 	uint lmax;
 	type n_type;
 
-	uint thisstate;
-	uint nextstate;
+	float thisstate;
+	float nextstate;
 	uint fired;	/*0:false 1:true*/
 	uint n_fired;
 } neuron;
@@ -139,7 +139,7 @@ struct nthread* thread_struct_new(uint, uint);
 int thread_create(struct nthread*, struct brain*, uint, uint);
 void* thread_func(void*);
 /*	src/util.c	*/
-int checkexist(uint, uint*, int);
+int checkexist(int, int*, int);
 char* get_type_name(type);
 int rand_int(int, int);
 float rand_float(float, float);
@@ -151,6 +151,7 @@ struct brain* parse_model_csv(char*);
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
 void render_handle_events(struct sdlctx*, struct brain*);
+SDL_Event render_get_event(void);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*);
 void render_cleanup(struct sdlctx*);

@@ -28,7 +28,7 @@ float rand_float(float min, float max)
 	return ret;
 }
 
-int checkexist(uint val, uint* arr, int size)
+int checkexist(int val, int* arr, int size)
 {
 	for (int i = 0; i < size; i++) {
 		if (arr[i] == val) {
@@ -80,6 +80,7 @@ struct brain* gen_brain(char* filename)
 	int ret = 0;
 	if (file) {
 		fread(ret_b, sizeof(struct brain), 1, file);
+		fclose(file);
 		ret = 1;
 	}
 	if (ret == 1) {
@@ -88,9 +89,10 @@ struct brain* gen_brain(char* filename)
 		}
 		return ret_b;
 	}
-	else
+	else {
+		free(ret_b);
 		return NULL;
-
+	}
 }
 
 int cbrain_print(int level, const char* str, ...)
