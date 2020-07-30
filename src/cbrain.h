@@ -160,6 +160,7 @@ void render_handle_events(struct sdlctx*, struct brain*);
 SDL_Event render_get_event(void);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*, struct brain*);
+void render_draw_activity_level(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw_brain(struct sdlctx*, struct entityctx*, struct brain*);
 void render_cleanup(struct sdlctx*);
 struct entityctx* render_spawn(int, int, int, int);

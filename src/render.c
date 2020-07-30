@@ -1,5 +1,7 @@
 #include "cbrain.h"
 
+int last_max_level = 0;
+
 struct sdlctx* render_init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -114,6 +116,7 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	SDL_SetRenderDrawColor(ctx->ren, 255, 255, 255, 255);
 	SDL_RenderClear(ctx->ren);
 	render_draw_brain(ctx, ec, b);
+	render_draw_activity_level(ctx, ec, b);
 	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 	SDL_RenderDrawLine(ctx->ren, v4x, v4y, v1x, v1y);
 	SDL_RenderDrawLine(ctx->ren, v1x, v1y, v2x, v2y);
@@ -147,6 +150,44 @@ void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b
 			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 		}
 	}
+}
+
+void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+{
+	SDL_Rect rect;
+	rect.x = 0;
+	rect.y = WIN_HEIGHT - 32;
+	rect.w = WIN_WIDTH;
+	rect.h = 32;
+	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+	if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
+		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
+	}
+
+	int total_fired = 0;
+	for (int i = 0; i < b->nc; i++) {
+		if (b->neurons[i]->fired) {
+			total_fired++;
+		}
+	}
+
+	if (last_max_level < total_fired) {
+		last_max_level = total_fired;
+	}
+
+	int wf = WIN_WIDTH * total_fired / b->nc;
+	SDL_Rect acrect;
+	acrect.x = 0;
+	acrect.y = WIN_HEIGHT - 32;
+	acrect.w = wf;
+	acrect.h = 32;
+	if (SDL_RenderFillRect(ctx->ren, &acrect) != 0) {
+		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
+	}
+
+	SDL_RenderDrawLine(ctx->ren, wf, acrect.y - 4, wf, WIN_HEIGHT);
+	SDL_RenderDrawLine(ctx->ren, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT - 32, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT);
+
 }
 
 void render_cleanup(struct sdlctx* ctx)
