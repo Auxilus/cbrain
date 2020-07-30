@@ -42,7 +42,7 @@ struct neuron* neuron_init(uint id)
 /* Link n to src with given weight */
 void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 {
-	printf("linking neuron %d to %d with %d\n", src->id, n->id, wt);
+	cbrain_print(0, "linking neuron %d to %d with %d\n", src->id, n->id, wt);
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
@@ -187,19 +187,18 @@ struct brain* brain_init(int s)
 
 void brain_neuron_type(struct brain* b, type t)
 {
-	printf("[%s]\n", get_type_name(t));
 	for (int i = 0; i < b->nc; i++) {
 		if (b->neurons[i]->n_type == t) {
-			printf("%d\n", b->neurons[i]->id);
+			cbrain_print(0, "%d\n", b->neurons[i]->id);
 		}
 	}
 }
 
 void show_stat(struct neuron* n)
 {
-	printf("ID: %d  thisstate: %f  nextstate: %f", n->id, n->thisstate, n->nextstate);
+	cbrain_print(0, "ID: %d  thisstate: %f  nextstate: %f", n->id, n->thisstate, n->nextstate);
 	for (int i = 0; i < n->lc; i++) {
-		printf("%u:%u ", n->links[i], n->wts[i]);
+		cbrain_print(0, "%u:%u ", n->links[i], n->wts[i]);
 	}
-	printf("\n");
+	cbrain_print(0, "\n");
 }

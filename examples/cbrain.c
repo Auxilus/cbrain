@@ -1,4 +1,4 @@
-#include <cbrain.h>
+#include "../src/cbrain.h"
 #include "defs.h"
 #include <unistd.h>
 
@@ -3964,11 +3964,10 @@ int main(int argc, char* argv[])
 	for (;;) {
 		// check for collision
 		int collision = 0;
-		printf("x: %f y: %f\n", ec->x, ec->y);
 		if (ec->x <= 0) { ec->x = 0; collision = 1; }
 		if (ec->y <= 0) { ec->y = 0; collision = 1; }
-		if (ec->x >= (600 - ec->height)) { ec->x = 600-ec->height; collision = 1; }
-		if (ec->y >= (400 - ec->height)) { ec->y = 400-ec->height; collision = 1; }
+		if (ec->x >= (WIN_WIDTH - ec->height)) { ec->x = WIN_WIDTH - ec->height; collision = 1; }
+		if (ec->y >= (WIN_HEIGHT - ec->height)) { ec->y = WIN_HEIGHT - ec->height; collision = 1; }
 		if (collision) {
 			neuron_fire(b->neurons[111], b);
 			neuron_fire(b->neurons[112], b);
@@ -3983,7 +3982,6 @@ int main(int argc, char* argv[])
 		}
 		b->neurons[MVULVA]->thisstate = 0;
 		render_handle_events(ctx, b);
-		// SDL_PollEvent(&ctx->event);
 		switch (ctx->event.type) {
 			case SDL_KEYDOWN:
 				if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "T") == 0) {
@@ -4009,15 +4007,11 @@ int main(int argc, char* argv[])
 					neuron_fire(b->neurons[73], b);
 					printf("giving food\n");
 				}
-				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "M") == 0) {
-					// brain_mutate(b, true);
-					printf("mutating brain\n");
-				}
 
 				break;
 		}
 		render_update(ctx, ec, b);
-		render_draw(ctx, ec);
+		render_draw(ctx, ec, b);
 		neuron_update_range(0, 399, b);
 		usleep(20000);
 	}

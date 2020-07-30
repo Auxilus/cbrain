@@ -40,6 +40,8 @@ SOFTWARE.
 #define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
+#define WIN_WIDTH 800
+#define WIN_HEIGHT 600
 
 #define RADTODEG 57.2957
 
@@ -157,7 +159,8 @@ struct sdlctx* render_init(void);
 void render_handle_events(struct sdlctx*, struct brain*);
 SDL_Event render_get_event(void);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
-void render_draw(struct sdlctx*, struct entityctx*);
+void render_draw(struct sdlctx*, struct entityctx*, struct brain*);
+void render_draw_brain(struct sdlctx*, struct entityctx*, struct brain*);
 void render_cleanup(struct sdlctx*);
 struct entityctx* render_spawn(int, int, int, int);
 #endif

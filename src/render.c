@@ -7,7 +7,7 @@ struct sdlctx* render_init()
 		exit(1);
 	} else {
 		struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
-		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_SHOWN);
+		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 		printf("%s\n", SDL_GetError());
 		ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
 		printf("%s\n", SDL_GetError());
@@ -66,7 +66,7 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	ec->y += dy;
 }
 
-void render_draw(struct sdlctx* ctx, struct entityctx* ec)
+void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
 	float v1x = 0.0f;
 	float v2x = 0.0f;
@@ -113,12 +113,40 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec)
 
 	SDL_SetRenderDrawColor(ctx->ren, 255, 255, 255, 255);
 	SDL_RenderClear(ctx->ren);
+	render_draw_brain(ctx, ec, b);
 	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 	SDL_RenderDrawLine(ctx->ren, v4x, v4y, v1x, v1y);
 	SDL_RenderDrawLine(ctx->ren, v1x, v1y, v2x, v2y);
 	SDL_RenderDrawLine(ctx->ren, v2x, v2y, v3x, v3y);
 	SDL_RenderDrawLine(ctx->ren, v3x, v3y, v4x, v4y);
 	SDL_RenderPresent(ctx->ren);
+}
+
+void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+{
+	for (int i = 0; i < b->nc; i++) {
+		int x = i % 32;
+		int y = i / 32.0;
+		SDL_Rect rect;
+		rect.x = x * 16 + 5;
+		rect.y = y * 16 + 5;
+		rect.w = 16;
+		rect.h = 16;
+		if (b->neurons[i]->fired) {
+			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
+				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+			}
+			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+		} else {
+			int shade = 255 - (255 * b->neurons[i]->thisstate / THRESHOLD);
+			SDL_SetRenderDrawColor(ctx->ren, shade, shade, shade, 255);
+			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
+				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+			}
+			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+		}
+	}
 }
 
 void render_cleanup(struct sdlctx* ctx)
