@@ -3962,6 +3962,25 @@ int main(int argc, char* argv[])
 	struct sdlctx* ctx = render_init();
 	struct entityctx* ec = render_spawn(300, 347, 347, 395);
 	for (;;) {
+		// check for collision
+		int collision = 0;
+		printf("x: %f y: %f\n", ec->x, ec->y);
+		if (ec->x <= 0) { ec->x = 0; collision = 1; }
+		if (ec->y <= 0) { ec->y = 0; collision = 1; }
+		if (ec->x >= (600 - ec->height)) { ec->x = 600-ec->height; collision = 1; }
+		if (ec->y >= (400 - ec->height)) { ec->y = 400-ec->height; collision = 1; }
+		if (collision) {
+			neuron_fire(b->neurons[111], b);
+			neuron_fire(b->neurons[112], b);
+			neuron_fire(b->neurons[43], b);
+			neuron_fire(b->neurons[44], b);
+			neuron_fire(b->neurons[127], b);
+			neuron_fire(b->neurons[128], b);
+			neuron_fire(b->neurons[151], b);
+			neuron_fire(b->neurons[152], b);
+			neuron_fire(b->neurons[153], b);
+			neuron_fire(b->neurons[154], b);
+		}
 		b->neurons[MVULVA]->thisstate = 0;
 		render_handle_events(ctx, b);
 		SDL_Event event = render_get_event();
