@@ -24,40 +24,10 @@ SDL_Event render_get_event()
 }
 void render_handle_events(struct sdlctx* ctx, struct brain* b)
 {
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	switch (event.type) {
+	SDL_PollEvent(&ctx->event);
+	switch (ctx->event.type) {
 		case SDL_QUIT:
 			render_cleanup(ctx);
-			break;
-		case SDL_KEYDOWN:
-			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "Q") == 0) {
-				render_cleanup(ctx);
-			}
-			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "T") == 0) {
-				neuron_fire(b->neurons[8], b);
-				neuron_fire(b->neurons[9], b);
-				printf("stimulating temperature sensor\n");
-			}
-			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "F") == 0) {
-				neuron_fire(b->neurons[4], b);
-				neuron_fire(b->neurons[5], b);
-				neuron_fire(b->neurons[42], b);
-				neuron_fire(b->neurons[41], b);
-				neuron_fire(b->neurons[45], b);
-				neuron_fire(b->neurons[46], b);
-				neuron_fire(b->neurons[48], b);
-				neuron_fire(b->neurons[76], b);
-				neuron_fire(b->neurons[77], b);
-				neuron_fire(b->neurons[72], b);
-				neuron_fire(b->neurons[73], b);
-				printf("giving food\n");
-			}
-			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "M") == 0) {
-				// brain_mutate(b, true);
-				printf("mutating brain\n");
-			}
-
 			break;
 	}
 }

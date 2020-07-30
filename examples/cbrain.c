@@ -3983,25 +3983,39 @@ int main(int argc, char* argv[])
 		}
 		b->neurons[MVULVA]->thisstate = 0;
 		render_handle_events(ctx, b);
-		SDL_Event event = render_get_event();
-		if (event.type == SDL_KEYDOWN)
-		{
-			if (strcmp(SDL_GetKeyName(event.key.keysym.sym), "F")) {
-				neuron_fire(b->neurons[4], b);
-				neuron_fire(b->neurons[5], b);
-				neuron_fire(b->neurons[42], b);
-				neuron_fire(b->neurons[41], b);
-				neuron_fire(b->neurons[45], b);
-				neuron_fire(b->neurons[46], b);
-				neuron_fire(b->neurons[48], b);
-				neuron_fire(b->neurons[76], b);
-				neuron_fire(b->neurons[77], b);
-				neuron_fire(b->neurons[72], b);
-				neuron_fire(b->neurons[73], b);
-				printf("Giving food\n");
-			}
-		}
+		// SDL_PollEvent(&ctx->event);
+		switch (ctx->event.type) {
+			case SDL_KEYDOWN:
+				if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "T") == 0) {
+					neuron_fire(b->neurons[8], b);
+					neuron_fire(b->neurons[9], b);
+					printf("stimulating temperature stimulus\n");
+				}
+				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "Q") == 0) {
+					printf("cheaning up...\n");
+					render_cleanup(ctx);
+				}
+				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "F") == 0) {
+					neuron_fire(b->neurons[4], b);
+					neuron_fire(b->neurons[5], b);
+					neuron_fire(b->neurons[42], b);
+					neuron_fire(b->neurons[41], b);
+					neuron_fire(b->neurons[45], b);
+					neuron_fire(b->neurons[46], b);
+					neuron_fire(b->neurons[48], b);
+					neuron_fire(b->neurons[76], b);
+					neuron_fire(b->neurons[77], b);
+					neuron_fire(b->neurons[72], b);
+					neuron_fire(b->neurons[73], b);
+					printf("giving food\n");
+				}
+				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "M") == 0) {
+					// brain_mutate(b, true);
+					printf("mutating brain\n");
+				}
 
+				break;
+		}
 		render_update(ctx, ec, b);
 		render_draw(ctx, ec);
 		neuron_update_range(0, 399, b);

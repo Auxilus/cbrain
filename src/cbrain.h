@@ -93,6 +93,7 @@ struct thread_bank {
 struct sdlctx {
 	SDL_Window* win;
 	SDL_Renderer* ren;
+	SDL_Event event;
 } sdlctx;
 
 struct vect {
