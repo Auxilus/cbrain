@@ -40,8 +40,8 @@ SOFTWARE.
 #define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
-#define WIN_WIDTH 800
-#define WIN_HEIGHT 600
+#define WIN_WIDTH 600
+#define WIN_HEIGHT 300
 
 #define RADTODEG 57.2957
 
@@ -119,7 +119,7 @@ struct entityctx {
 struct brain* brain_init(int);
 void brain_neuron_type(struct brain*, type);
 struct neuron* neuron_init(uint);
-void neuron_link(struct neuron*, struct neuron*, uint);
+void neuron_link(struct neuron*, struct neuron*, int);
 void neuron_link_random(struct brain*);
 void neuron_unlink(struct neuron*, struct neuron*);
 void neuron_accum(struct neuron*, uint);

@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "cbrain.h"
 
-/* Initialize new neuron */
+/* initialize new neuron */
 struct neuron* neuron_init(uint id)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
@@ -39,11 +39,18 @@ struct neuron* neuron_init(uint id)
 	return n;
 }
 
-/* Link n to src with given weight */
-void neuron_link(struct neuron* src, struct neuron* n, uint wt)
+/* link neuron 'n' to neuron 'src' with given weight 'wt' */
+void neuron_link(struct neuron* src, struct neuron* n, int wt)
 {
 	cbrain_print(0, "linking neuron %d to %d with %d\n", src->id, n->id, wt);
+
+	// link constraints:
+	//		neuron shouldn't have a link with itself
+	//		source neuron can't be a motor neuron
+	//		target neuron can't be a sensory neuron
 	if ((src->id != n->id) && (src->n_type != motor) && (n->n_type != sensory)) {
+
+		// reallocate links and wts 
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
 			cbrain_print(2, "reallocating memory... nid: %u\n", src->id);
@@ -56,6 +63,7 @@ void neuron_link(struct neuron* src, struct neuron* n, uint wt)
 	}
 }
 
+/* make random links */
 void neuron_link_random(struct brain* b)
 {
 	for (int i = 0; i < (int)b->nc; i++) {
@@ -68,10 +76,11 @@ void neuron_link_random(struct brain* b)
 	}
 }
 
+/* remove a neural link */
 void neuron_unlink(struct neuron* src, struct neuron* n)
 {
-	int pos;
-	pos = checkexist(n->id, src->links, (int)src->lc);
+	// make sure that the link exists for neuron 'n' in 'src->links'
+	int pos = checkexist(n->id, src->links, (int)src->lc);
 	if (!(pos == -1)) {
 		if (pos < src->lc) {
 			src->links[pos] = src->links[pos+1];
@@ -94,24 +103,19 @@ void neuron_accum(struct neuron* n, uint wt)
 }
 
 /* check if neuron's thisstate exceeds the threshold,
- * fire the neuron if it does and reset thisstate, nextstate accordingly
+ * fire the neuron if it does and reset thisstate, nextstate
  */
 int neuron_update(struct neuron* n, struct brain* b)
 {
-	//if (DEBUG == 1) { show_stat(n); }
+	// id of 'n' shouldn't be greater than the max id in brain 'b'
 	assert(n->id <= (b->nc - 1));
+
+	// fire neuron if thisstate exceeds THRESHOLD
 	if (n->thisstate >= THRESHOLD) {
 		cbrain_print(3, "firing neuron %d\n", n->id);
 		for (int i = 0; i < n->lc; i++) {
-			assert(n->links[i] <= (b->nc - 1));
-			assert(n->wts[i]);
 			cbrain_print(4, "sending weight %d to %d\n", n->wts[i], n->links[i]);
-			float past = b->neurons[n->links[i]]->nextstate;
 			b->neurons[n->links[i]]->nextstate += n->wts[i];
-			if (b->neurons[n->links[i]]->nextstate > 1000) {
-				cbrain_print(2, "faulty fire from %d to %d [%d] (is %f was %f)\n", n->id, n->links[i], n->wts[i], b->neurons[n->links[i]]->nextstate, past);
-				exit(-1);
-			}
 		}
 		n->thisstate = 0;
 		n->nextstate = 0;
@@ -165,12 +169,15 @@ void neuron_add(struct brain* b)
 	
 }
 
-/* send respective weights to links */
+/* set thisstate of neuron 'n' to THRESHOLD 
+ * so that it will be fired when neuron_update is called next time
+ */
 void neuron_fire(struct neuron* n, struct brain* b)
 {
 	n->thisstate = THRESHOLD;
 }
 
+/* initialize brain with given number of neurons 's' */
 struct brain* brain_init(int s)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
@@ -178,9 +185,10 @@ struct brain* brain_init(int s)
 	b->nmax = b->nc;
 	b->fitness = 0.0;
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * b->nmax);
+
+	// make neurons
 	for (int i = 0; i < s; i++) {
-		struct neuron* n = neuron_init(i);
-		b->neurons[i] = n;
+		b->neurons[i] = neuron_init(i);
 	}
 	return b;
 }
