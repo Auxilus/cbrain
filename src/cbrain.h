@@ -40,8 +40,8 @@ SOFTWARE.
 #define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
-#define WIN_WIDTH 600
-#define WIN_HEIGHT 300
+#define WIN_WIDTH 800
+#define WIN_HEIGHT 400
 
 #define RADTODEG 57.2957
 
