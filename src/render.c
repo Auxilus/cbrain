@@ -1,7 +1,9 @@
 #include "cbrain.h"
 
 int last_max_level = 0;
+int draw_brain = 0;
 
+/* setup sdl */
 struct sdlctx* render_init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -18,12 +20,7 @@ struct sdlctx* render_init()
 	}
 }
 
-SDL_Event render_get_event()
-{
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	return event;
-}
+/* handle sdl events */
 void render_handle_events(struct sdlctx* ctx, struct brain* b)
 {
 	SDL_PollEvent(&ctx->event);
@@ -31,24 +28,26 @@ void render_handle_events(struct sdlctx* ctx, struct brain* b)
 		case SDL_QUIT:
 			render_cleanup(ctx);
 			break;
+		case SDL_KEYDOWN:
+			if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "D") == 0) {
+				draw_brain = !draw_brain;
+			}
 	}
 }
 
+/* update speed, rotation of the entity instance */
 void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
 	int acc_right = 0;
 	int acc_left = 0;
-	float dx = 0;
-	float dy = 0;
+
 	for (int i = ec->mrstart; i < ec->mrend; i++) {
 		acc_right += b->neurons[i]->thisstate;
-		cbrain_print(2, "reducing thisstate for %d from %f to %f\n", b->neurons[i]->id, b->neurons[i]->thisstate, b->neurons[i]->thisstate*0.7);
 		b->neurons[i]->thisstate *= 0.7;
 	}
 
 	for (int i = ec->mlstart; i < ec->mlend; i++) {
-		int st = b->neurons[i]->thisstate;
-		acc_left += st;
+		acc_left += b->neurons[i]->thisstate;
 		b->neurons[i]->thisstate *= 0.7;
 	}
 
@@ -61,11 +60,9 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 		ec->rot += 5.0;
 	}
 
-	dx = cosf(ec->rot / RADTODEG) * speed;
-	dy = sinf(ec->rot / RADTODEG) * speed;
-
-	ec->x += dx;
-	ec->y += dy;
+	// update entity position
+	ec->x += cosf(ec->rot / RADTODEG) * speed;
+	ec->y += sinf(ec->rot / RADTODEG) * speed;
 }
 
 void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
@@ -115,8 +112,11 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 
 	SDL_SetRenderDrawColor(ctx->ren, 255, 255, 255, 255);
 	SDL_RenderClear(ctx->ren);
-	render_draw_brain(ctx, ec, b);
-	render_draw_activity_level(ctx, ec, b);
+
+	if (draw_brain) {
+		render_draw_brain(ctx, ec, b);
+		render_draw_activity_level(ctx, ec, b);
+	}
 	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 	SDL_RenderDrawLine(ctx->ren, v4x, v4y, v1x, v1y);
 	SDL_RenderDrawLine(ctx->ren, v1x, v1y, v2x, v2y);
