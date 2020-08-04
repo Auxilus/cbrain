@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2018 Auxilus raghavsphadke@gmail.com
+Copyright (c) 2018-2020 Auxilus raghavsphadke@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -112,6 +112,7 @@ int neuron_update(struct neuron* n, struct brain* b)
 
 	// fire neuron if thisstate exceeds THRESHOLD
 	if (n->thisstate >= THRESHOLD) {
+		n->f_type = self;
 		cbrain_print(3, "firing neuron %d\n", n->id);
 		for (int i = 0; i < n->lc; i++) {
 			cbrain_print(4, "sending weight %d to %d\n", n->wts[i], n->links[i]);
@@ -174,6 +175,7 @@ void neuron_add(struct brain* b)
  */
 void neuron_fire(struct neuron* n, struct brain* b)
 {
+	n->f_type = user;
 	n->thisstate = THRESHOLD;
 }
 

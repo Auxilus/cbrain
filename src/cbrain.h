@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2018 Auxilus raghavsphadke@gmail.com
+Copyright (c) 2018-2020 Auxilus raghavsphadke@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,8 @@ SOFTWARE.
 #define RADTODEG 57.2957
 
 typedef unsigned int uint;
-typedef enum {undefined, sensory, intermediate, motor} type;
+typedef enum { undefined, sensory, intermediate, motor } type;
+typedef enum { user, self } fire_type;
 
 pthread_mutex_t lock;
 
@@ -57,6 +58,7 @@ struct neuron {
 	uint lc;
 	uint lmax;
 	type n_type;
+	fire_type f_type;
 
 	float thisstate;
 	float nextstate;
@@ -156,8 +158,8 @@ struct brain* parse_model_csv(char*);
 
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
-void render_handle_events(struct sdlctx*, struct brain*);
 SDL_Event render_get_event(void);
+void render_handle_events(struct sdlctx*, struct brain*);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw_activity_level(struct sdlctx*, struct entityctx*, struct brain*);

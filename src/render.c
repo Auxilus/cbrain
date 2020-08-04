@@ -1,3 +1,23 @@
+/*
+Copyright (c) 2018-2020 Auxilus raghavsphadke@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include "cbrain.h"
 
 int last_max_level = 0;
@@ -33,6 +53,7 @@ void render_handle_events(struct sdlctx* ctx, struct brain* b)
 			break;
 	}
 }
+
 
 void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
@@ -128,38 +149,52 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
-		int x = i % 32;
-		int y = i / 32.0;
+		int x = i % 16;
+		int y = i / 16.0;
 		SDL_Rect rect;
-		rect.x = x * 16 + 5;
-		rect.y = y * 16 + 5;
-		rect.w = 16;
-		rect.h = 16;
+		rect.x = x * 8;
+		rect.y = y * 8;
+		rect.w = 8;
+		rect.h = 8;
 		if (b->neurons[i]->fired) {
-			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+			if (b->neurons[i]->f_type == user) {
+				SDL_SetRenderDrawColor(ctx->ren, 164, 36, 59, 255);
+			} else {
+				SDL_SetRenderDrawColor(ctx->ren, 19, 56, 71, 255);
+			}
 			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
 				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
 			}
-			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
-		} else {
-			int shade = 255 - (255 * b->neurons[i]->thisstate / THRESHOLD);
-			SDL_SetRenderDrawColor(ctx->ren, shade, shade, shade, 255);
-			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
-				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+		}
+		else {
+			if (b->neurons[i]->thisstate == 0) {
+				SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+				if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
+					printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+				}
 			}
-			SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+			else {
+				// int shade = 255 - (255 * b->neurons[i]->thisstate / THRESHOLD);
+				// SDL_SetRenderDrawColor(ctx->ren, shade, shade, shade, 255);
+				SDL_SetRenderDrawColor(ctx->ren, 150, 150, 150, 255);
+				if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
+					printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+				}
+			}
 		}
 	}
+	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 }
 
 void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
+	int activity_box_height = 16;
 	SDL_Rect rect;
 	rect.x = 0;
-	rect.y = WIN_HEIGHT - 32;
+	rect.y = WIN_HEIGHT - activity_box_height;
 	rect.w = WIN_WIDTH;
-	rect.h = 32;
-	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+	rect.h = activity_box_height;
+	SDL_SetRenderDrawColor(ctx->ren, 100, 100, 100, 255);
 	if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
 		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
 	}
@@ -178,15 +213,15 @@ void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct
 	int wf = WIN_WIDTH * total_fired / b->nc;
 	SDL_Rect acrect;
 	acrect.x = 0;
-	acrect.y = WIN_HEIGHT - 32;
+	acrect.y = WIN_HEIGHT - activity_box_height;
 	acrect.w = wf;
-	acrect.h = 32;
+	acrect.h = activity_box_height;
 	if (SDL_RenderFillRect(ctx->ren, &acrect) != 0) {
 		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
 	}
 
 	SDL_RenderDrawLine(ctx->ren, wf, acrect.y - 4, wf, WIN_HEIGHT);
-	SDL_RenderDrawLine(ctx->ren, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT - 32, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT);
+	SDL_RenderDrawLine(ctx->ren, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT - activity_box_height, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT);
 
 }
 

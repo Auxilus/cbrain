@@ -3984,12 +3984,7 @@ int main(int argc, char* argv[])
 		render_handle_events(ctx, b);
 		switch (ctx->event.type) {
 			case SDL_KEYDOWN:
-				if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "T") == 0) {
-					neuron_fire(b->neurons[8], b);
-					neuron_fire(b->neurons[9], b);
-					printf("stimulating temperature stimulus\n");
-				}
-				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "Q") == 0) {
+				if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "Q") == 0) {
 					printf("cheaning up...\n");
 					render_cleanup(ctx);
 				}
