@@ -1,4 +1,6 @@
 # cbrain
+![C/C++ CI](https://github.com/Auxilus/cbrain/workflows/C/C++%20CI/badge.svg)
+
 Simple implementation of neural structure in c.
 
 # Installation
