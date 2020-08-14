@@ -49,8 +49,6 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
 	int acc_right = 0;
 	int acc_left = 0;
-	float dx = 0;
-	float dy = 0;
 	for (int i = ec->mrstart; i < ec->mrend; i++) {
 		acc_right += b->neurons[i]->thisstate;
 		b->neurons[i]->thisstate *= 0.7;

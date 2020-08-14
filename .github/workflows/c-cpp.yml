@@ -17,5 +17,5 @@ jobs:
       run: sudo apt install libsdl2-dev
     - name: make
       run: make
-    - name: size check
-      run: ls -al libcbrain.so
+    - name: check size
+      run: ls -alh libcbrain.so
