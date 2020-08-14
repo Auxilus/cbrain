@@ -158,8 +158,7 @@ struct brain* parse_model_csv(char*);
 
 /*	src/render.c	*/
 struct sdlctx* render_init(void);
-SDL_Event render_get_event(void);
-void render_handle_events(struct sdlctx*, struct brain*);
+void render_handle_events(struct sdlctx*);
 void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw_activity_level(struct sdlctx*, struct entityctx*, struct brain*);

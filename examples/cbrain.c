@@ -3981,7 +3981,7 @@ int main(int argc, char* argv[])
 			neuron_fire(b->neurons[154], b);
 		}
 		b->neurons[MVULVA]->thisstate = 0;
-		render_handle_events(ctx, b);
+		render_handle_events(ctx);
 		switch (ctx->event.type) {
 			case SDL_KEYDOWN:
 				if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "Q") == 0) {

@@ -28,9 +28,9 @@ struct neuron* neuron_init(uint id)
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 	n->id = id;
 	n->lc = 0;
-	n->lmax = 100;
-	n->links = (int*)malloc(400); /* sizeof(int) * n->lmax */
-	n->wts = (int*)malloc(400);   /* |----4----| * |-100-| */
+	n->lmax = 20;
+	n->links = (int*)malloc(4 * 20); /* sizeof(int) * n->lmax */
+	n->wts = (int*)malloc(4 * 20);   /* |----4----| * |-100-| */
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
 	n->fired     = 0;
@@ -53,7 +53,7 @@ void neuron_link(struct neuron* src, struct neuron* n, int wt)
 		// reallocate links and wts 
 		if ((src->lc + 1) > src->lmax) {
 			src->lmax *= 2;
-			cbrain_print(2, "reallocating memory... nid: %u\n", src->id);
+			cbrain_print(2, "reallocating memory for links [id: %u]\n", src->id);
 			src->links = (int*)realloc(src->links, sizeof(int) * src->lmax);
 			src->wts = (int*)realloc(src->wts, sizeof(int) * src->lmax);
 		}
@@ -113,14 +113,13 @@ int neuron_update(struct neuron* n, struct brain* b)
 	// fire neuron if thisstate exceeds THRESHOLD
 	if (n->thisstate >= THRESHOLD) {
 		n->f_type = self;
-		cbrain_print(3, "firing neuron %d\n", n->id);
 		for (int i = 0; i < n->lc; i++) {
-			cbrain_print(4, "sending weight %d to %d\n", n->wts[i], n->links[i]);
+			cbrain_print(4, "sending %d from %d to %d\n", n->wts[i], n->id, n->links[i]);
 			b->neurons[n->links[i]]->nextstate += n->wts[i];
 		}
+		n->fired = 1;
 		n->thisstate = 0;
 		n->nextstate = 0;
-		n->fired = 1;
 		n->n_fired += 1;
 	} else {
 		n->thisstate += n->nextstate;
@@ -153,7 +152,7 @@ void neuron_add(struct brain* b)
 	n = neuron_init(b->nc);
 	if ((b->nc + 1) > b->nmax) {
 		b->nmax *= 2;
-		cbrain_print(2, "reallocating memory... nc: %u\n", b->nc);
+		cbrain_print(2, "reallocating memory nc: %u\n", b->nc);
 	}
 	b->nc += 1;
 	b->neurons = (struct neuron**)realloc(b->neurons, sizeof(struct neuron) * b->nmax);
@@ -183,10 +182,10 @@ void neuron_fire(struct neuron* n, struct brain* b)
 struct brain* brain_init(int s)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
+	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * s);
 	b->nc = s;
-	b->nmax = b->nc;
+	b->nmax = s;
 	b->fitness = 0.0;
-	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * b->nmax);
 
 	// make neurons
 	for (int i = 0; i < s; i++) {

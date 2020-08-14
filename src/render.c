@@ -30,21 +30,12 @@ struct sdlctx* render_init()
 	} else {
 		struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
 		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
-		printf("%s\n", SDL_GetError());
 		ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
-		printf("%s\n", SDL_GetError());
-		printf("%p %p\n", ctx->win, ctx->ren);
 		return ctx;
 	}
 }
 
-SDL_Event render_get_event()
-{
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	return event;
-}
-void render_handle_events(struct sdlctx* ctx, struct brain* b)
+void render_handle_events(struct sdlctx* ctx)
 {
 	SDL_PollEvent(&ctx->event);
 	switch (ctx->event.type) {
@@ -54,7 +45,6 @@ void render_handle_events(struct sdlctx* ctx, struct brain* b)
 	}
 }
 
-
 void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 {
 	int acc_right = 0;
@@ -63,7 +53,6 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	float dy = 0;
 	for (int i = ec->mrstart; i < ec->mrend; i++) {
 		acc_right += b->neurons[i]->thisstate;
-		cbrain_print(2, "reducing thisstate for %d from %f to %f\n", b->neurons[i]->id, b->neurons[i]->thisstate, b->neurons[i]->thisstate*0.7);
 		b->neurons[i]->thisstate *= 0.7;
 	}
 
@@ -76,17 +65,9 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	float speed = acc_right + acc_left;
 	speed = speed / 150.0;
 
-	if (acc_right > acc_left) {
-		ec->rot -= 5.0;
-	} else if (acc_left > acc_right) {
-		ec->rot += 5.0;
-	}
-
-	dx = cosf(ec->rot / RADTODEG) * speed;
-	dy = sinf(ec->rot / RADTODEG) * speed;
-
-	ec->x += dx;
-	ec->y += dy;
+	ec->rot  += (acc_right > acc_left) ? -5.0 : (acc_left > acc_right) ? 5.0 : 0.0;
+	ec->x += cosf(ec->rot / RADTODEG) * speed;
+	ec->y += sinf(ec->rot / RADTODEG) * speed;
 }
 
 void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
@@ -114,13 +95,10 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 
 		v1x = x*ca - y*sa + cx;
 		v1y = x*sa + y*ca + cy;
-
 		v2x = w*ca - y*sa + cx;
 		v2y = w*sa + y*ca + cy;
-
 		v3x = w*ca - h*sa + cx;
 		v3y = w*sa + h*ca + cy;
-
 		v4x = x*ca - h*sa + cx;
 		v4y = x*sa + h*ca + cy;
 	} else {
