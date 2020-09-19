@@ -33,16 +33,16 @@ struct neuron* neuron_init(uint id)
 	n->wts = (int*)malloc(4 * 20);   /* |----4----| * |-100-| */
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
-	n->fired     = 0;
-	n->n_fired   = 0;
-	n->n_type   = undefined;
+	n->fired = 0;
+	n->n_fired = 0;
+	n->n_type = undefined;
 	return n;
 }
 
 /* link neuron 'n' to neuron 'src' with given weight 'wt' */
 void neuron_link(struct neuron* src, struct neuron* n, int wt)
 {
-	cbrain_print(0, "linking neuron %d to %d with %d\n", src->id, n->id, wt);
+	cbrain_print(1, "linking neuron %d to %d with %d\n", src->id, n->id, wt);
 
 	// link constraints:
 	//		neuron shouldn't have a link with itself
@@ -123,8 +123,14 @@ int neuron_update(struct neuron* n, struct brain* b)
 		n->n_fired += 1;
 	} else {
 		n->thisstate += n->nextstate;
-		n->nextstate = 0;
-		n->fired     = 0;
+
+		// thisstate decay if next state is zero
+		if (n->nextstate == 0 && n->thisstate > STATE_DECAY) {
+			n->thisstate -= STATE_DECAY;
+		} else {
+			n->nextstate = 0;
+		}
+		n->fired = 0;
 	}
 	return n->fired;
 }
@@ -162,7 +168,7 @@ void neuron_add(struct brain* b)
 	for (int j = 0; j < 10; j++) {
 		uint id = (uint)rand_int(0, b->nc - 1);
 		if (!(id == n->id) && (checkexist(id, n->links, n->lc) == -1)) {
-			cbrain_print(1, "linking %d to %d with weight\n", id, n->id);
+			cbrain_print(2, "linking %d to %d with weight\n", id, n->id);
 			neuron_link(n, b->neurons[(int)id], rand_int(WEIGHT_MIN, WEIGHT_MAX));
 		}
 	}

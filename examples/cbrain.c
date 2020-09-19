@@ -5,6 +5,9 @@
 int main(int argc, char* argv[])
 {
 	struct brain* b = brain_init(400);
+	printf("-------------------\n");
+	printf("building connectome\n");
+	printf("-------------------\n");
 	neuron_link(b->neurons[ADAL], b->neurons[ADAR], 1);
 	neuron_link(b->neurons[ADAL], b->neurons[ADFL], 1);
 	neuron_link(b->neurons[ADAL], b->neurons[AIBL], 1);

@@ -35,6 +35,7 @@ SOFTWARE.
 /* control constants */
 #define DEBUG 0
 #define THRESHOLD 20.0
+#define STATE_DECAY 0.1
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
 #define MUTATE_PROB 0.00001
@@ -132,7 +133,7 @@ void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void show_stat(struct neuron*);
 
-/*	src/jar.c	*/
+/*	src/jar.c  */
 struct jar* jar_init(int, int);
 void jar_update(struct jar*);
 void brain_mutate(struct brain*, bool);
