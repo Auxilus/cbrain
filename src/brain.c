@@ -23,7 +23,7 @@ SOFTWARE.
 #include "cbrain.h"
 
 /* initialize new neuron */
-struct neuron* neuron_init(uint id)
+struct neuron* neuron_init(uint id, float decay)
 {
 	struct neuron* n = (struct neuron*)malloc(sizeof(struct neuron));
 	n->id = id;
@@ -33,6 +33,7 @@ struct neuron* neuron_init(uint id)
 	n->wts = (int*)malloc(4 * 20);   /* |----4----| * |-100-| */
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
+	n->state_decay = decay;
 	n->fired = 0;
 	n->n_fired = 0;
 	n->n_type = undefined;
@@ -125,9 +126,9 @@ int neuron_update(struct neuron* n, struct brain* b)
 		n->thisstate += n->nextstate;
 
 		// thisstate decay if next state is zero
-		if (n->nextstate == 0 && n->thisstate > STATE_DECAY && n->fired == 0) {
+		if (n->nextstate == 0 && n->thisstate > n->state_decay && n->fired == 0) {
 			// make sure thisstate completely decays
-			n->thisstate -= ((n->thisstate - STATE_DECAY) < STATE_DECAY) ? n->thisstate : STATE_DECAY;
+			n->thisstate -= ((n->thisstate - n->state_decay) < n->state_decay) ? n->thisstate : n->state_decay;
 			cbrain_print(4, "[%d] decay %f\n", n->id, n->thisstate);
 		} else {
 			n->nextstate = 0;
@@ -157,7 +158,7 @@ void neuron_set_type(struct neuron* n, type t)
 void neuron_add(struct brain* b)
 {
 	struct neuron* n;
-	n = neuron_init(b->nc);
+	n = neuron_init(b->nc, b->state_decay);
 	if ((b->nc + 1) > b->nmax) {
 		b->nmax *= 2;
 		cbrain_print(2, "reallocating memory nc: %u\n", b->nc);
@@ -180,26 +181,36 @@ void neuron_add(struct brain* b)
 /* set thisstate of neuron 'n' to THRESHOLD 
  * so that it will be fired when neuron_update is called next time
  */
-void neuron_fire(struct neuron* n, struct brain* b)
+void neuron_fire(struct neuron* n)
 {
 	n->f_type = user;
 	n->thisstate = THRESHOLD;
 }
 
 /* initialize brain with given number of neurons 's' */
-struct brain* brain_init(int s)
+struct brain* brain_init(int s, float decay)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * s);
 	b->nc = s;
 	b->nmax = s;
 	b->fitness = 0.0;
+	b->state_decay = decay;
 
 	// make neurons
 	for (int i = 0; i < s; i++) {
-		b->neurons[i] = neuron_init(i);
+		b->neurons[i] = neuron_init(i, decay);
 	}
 	return b;
+}
+
+void brain_reset(struct brain* b)
+{
+	for (int i = 0; i < b->nc; i++) {
+		b->neurons[i]->thisstate = 0;
+		b->neurons[i]->nextstate = 0;
+		b->neurons[i]->fired = 0;
+	}
 }
 
 void brain_neuron_type(struct brain* b, type t)

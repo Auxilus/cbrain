@@ -35,7 +35,6 @@ SOFTWARE.
 /* control constants */
 #define DEBUG 0
 #define THRESHOLD 20.0
-#define STATE_DECAY rand_float(0.1, 0.3)
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
 #define MUTATE_PROB 0.00001
@@ -63,6 +62,7 @@ struct neuron {
 
 	float thisstate;
 	float nextstate;
+	float state_decay;
 	uint fired;
 	uint n_fired;
 } neuron;
@@ -70,6 +70,7 @@ struct neuron {
 struct brain {
 	uint nc;
 	uint nmax;
+	float state_decay;
 	float fitness;
 	struct neuron** neurons;
 } brain;
@@ -112,14 +113,15 @@ struct entityctx {
 } entityctx;
 
 /*	src/brain.c	*/
-struct brain* brain_init(int);
+struct brain* brain_init(int, float);
+void brain_reset(struct brain*);
 void brain_neuron_type(struct brain*, type);
-struct neuron* neuron_init(uint);
+struct neuron* neuron_init(uint, float);
 void neuron_link(struct neuron*, struct neuron*, int);
 void neuron_link_random(struct brain*);
 void neuron_unlink(struct neuron*, struct neuron*);
 void neuron_accum(struct neuron*, uint);
-void neuron_fire(struct neuron*, struct brain*);
+void neuron_fire(struct neuron*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void neuron_set_type(struct neuron*, type);

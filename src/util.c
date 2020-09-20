@@ -130,7 +130,7 @@ int cbrain_print(int level, const char* str, ...)
 
 struct brain* parse_model_csv(char* file)
 {
-	struct brain* b = brain_init(500);
+	struct brain* b = brain_init(500, rand_float(0.1, 0.2));
 	FILE* f = fopen(file, "r");
 	if (f == NULL) {
 		printf("failed to load file %s\n", file);

@@ -68,7 +68,7 @@ void* thread_func(void* args)
 	if (f == -1) {
 		for (;;) {
 			for (int i = 0; i < (int)b->nc; i++) {
-				neuron_fire(b->neurons[i], b);
+				neuron_fire(b->neurons[i]);
 				sleep(sleep_t);
 			}
 		}

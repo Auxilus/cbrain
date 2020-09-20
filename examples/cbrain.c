@@ -4,11 +4,13 @@
 
 int main(int argc, char* argv[])
 {
-	struct brain* b = brain_init(400);
-	printf("-------------------\n");
-	printf("building connectome\n");
-	printf("using decay %f\n", STATE_DECAY);
-	printf("-------------------\n");
+	srand((unsigned int)time(NULL));
+	float state_decay = rand_float(0.1, 0.5);
+	struct brain* b = brain_init(400, state_decay);
+	printf("+--------------------+\n");
+	printf("|building connectome |\n");
+	printf("|using decay %f|\n", state_decay);
+	printf("+--------------------+\n");
 	neuron_link(b->neurons[ADAL], b->neurons[ADAR], 1);
 	neuron_link(b->neurons[ADAL], b->neurons[ADFL], 1);
 	neuron_link(b->neurons[ADAL], b->neurons[AIBL], 1);
@@ -3973,16 +3975,16 @@ int main(int argc, char* argv[])
 		if (ec->x >= (WIN_WIDTH - ec->height)) { ec->x = WIN_WIDTH - ec->height; collision = 1; }
 		if (ec->y >= (WIN_HEIGHT - ec->height)) { ec->y = WIN_HEIGHT - ec->height; collision = 1; }
 		if (collision) {
-			neuron_fire(b->neurons[111], b);
-			neuron_fire(b->neurons[112], b);
-			neuron_fire(b->neurons[43], b);
-			neuron_fire(b->neurons[44], b);
-			neuron_fire(b->neurons[127], b);
-			neuron_fire(b->neurons[128], b);
-			neuron_fire(b->neurons[151], b);
-			neuron_fire(b->neurons[152], b);
-			neuron_fire(b->neurons[153], b);
-			neuron_fire(b->neurons[154], b);
+			neuron_fire(b->neurons[111]);
+			neuron_fire(b->neurons[112]);
+			neuron_fire(b->neurons[43]);
+			neuron_fire(b->neurons[44]);
+			neuron_fire(b->neurons[127]);
+			neuron_fire(b->neurons[128]);
+			neuron_fire(b->neurons[151]);
+			neuron_fire(b->neurons[152]);
+			neuron_fire(b->neurons[153]);
+			neuron_fire(b->neurons[154]);
 		}
 		b->neurons[MVULVA]->thisstate = 0;
 		render_handle_events(ctx);
@@ -3993,17 +3995,17 @@ int main(int argc, char* argv[])
 					render_cleanup(ctx);
 				}
 				else if (strcmp(SDL_GetKeyName(ctx->event.key.keysym.sym), "F") == 0) {
-					neuron_fire(b->neurons[4], b);
-					neuron_fire(b->neurons[5], b);
-					neuron_fire(b->neurons[42], b);
-					neuron_fire(b->neurons[41], b);
-					neuron_fire(b->neurons[45], b);
-					neuron_fire(b->neurons[46], b);
-					neuron_fire(b->neurons[48], b);
-					neuron_fire(b->neurons[76], b);
-					neuron_fire(b->neurons[77], b);
-					neuron_fire(b->neurons[72], b);
-					neuron_fire(b->neurons[73], b);
+					neuron_fire(b->neurons[4]);
+					neuron_fire(b->neurons[5]);
+					neuron_fire(b->neurons[42]);
+					neuron_fire(b->neurons[41]);
+					neuron_fire(b->neurons[45]);
+					neuron_fire(b->neurons[46]);
+					neuron_fire(b->neurons[48]);
+					neuron_fire(b->neurons[76]);
+					neuron_fire(b->neurons[77]);
+					neuron_fire(b->neurons[72]);
+					neuron_fire(b->neurons[73]);
 					printf("giving food\n");
 				}
 
