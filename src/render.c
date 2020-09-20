@@ -134,9 +134,9 @@ void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b
 		rect.h = 8;
 		if (b->neurons[i]->fired) {
 			if (b->neurons[i]->f_type == user) {
-				SDL_SetRenderDrawColor(ctx->ren, 164, 36, 59, 255);
+				SDL_SetRenderDrawColor(ctx->ren, 223, 155, 109, 255);
 			} else {
-				SDL_SetRenderDrawColor(ctx->ren, 19, 56, 71, 255);
+				SDL_SetRenderDrawColor(ctx->ren, 175, 27, 63, 255);
 			}
 			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
 				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
@@ -144,7 +144,7 @@ void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b
 		}
 		else {
 			if (b->neurons[i]->thisstate == 0) {
-				SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
+				SDL_SetRenderDrawColor(ctx->ren, 71, 49, 68, 255);
 				if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
 					printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
 				}

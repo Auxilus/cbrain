@@ -74,13 +74,6 @@ struct brain {
 	struct neuron** neurons;
 } brain;
 
-struct jar {
-	uint bc;
-	uint bmax;
-	struct brain* fittest;
-	struct brain** brains;
-} jar;
-
 struct nthread {
 	pthread_t tid;
 	uint s;
@@ -133,12 +126,8 @@ void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void show_stat(struct neuron*);
 
-/*	src/jar.c  */
-struct jar* jar_init(int, int);
-void jar_update(struct jar*);
-void brain_mutate(struct brain*, bool);
-void brain_eval(struct brain*, float);
-void brain_eval_range(struct brain*, int, int, float);
+/*	src/tem.c  */
+void tem_m(struct brain*);
 
 /*	src/thread.c	*/
 struct thread_bank* thread_bank_new(uint);
