@@ -125,8 +125,10 @@ int neuron_update(struct neuron* n, struct brain* b)
 		n->thisstate += n->nextstate;
 
 		// thisstate decay if next state is zero
-		if (n->nextstate == 0 && n->thisstate > STATE_DECAY) {
-			n->thisstate -= STATE_DECAY;
+		if (n->nextstate == 0 && n->thisstate > STATE_DECAY && n->fired == 0) {
+			// make sure thisstate completely decays
+			n->thisstate -= ((n->thisstate - STATE_DECAY) < STATE_DECAY) ? n->thisstate : STATE_DECAY;
+			cbrain_print(4, "[%d] decay %f\n", n->id, n->thisstate);
 		} else {
 			n->nextstate = 0;
 		}

@@ -20,6 +20,11 @@ SOFTWARE.
 
 #include "cbrain.h"
 
+void tem_t(struct brain* b, int* motor, int* sensory, int* inputs, int* outputs)
+{
+
+}
+
 void tem_m(struct brain* b)
 {
 	for (int i = 0; i < b->nc; i++) {
