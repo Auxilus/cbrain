@@ -35,6 +35,7 @@ SOFTWARE.
 /* control constants */
 #define DEBUG 0
 #define THRESHOLD 20.0
+#define REFACT -0.5
 #define MAX_WT_DIFF 5
 #define SLEEP_T 0
 #define MUTATE_PROB 0.00001

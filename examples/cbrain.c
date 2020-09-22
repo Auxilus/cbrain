@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
-	float state_decay = rand_float(0.1, 0.5);
+	float state_decay = rand_float(0.1, 0.3);
 	struct brain* b = brain_init(400, state_decay);
 	printf("+--------------------+\n");
 	printf("|building connectome |\n");

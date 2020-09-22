@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	printf("-------------------\n");
 
     int inputs[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    int outputs[10] = { 190, 191, 192, 193, 194, 195, 196, 197, 198, 199};
+    int outputs[10] = { 190, 191, 192, 193, 194, 195, 196, 197, 198, 199 };
 
     for (int n = 0; n < 10; n++) { neuron_set_type(b->neurons[inputs[n]], sensory); }
     for (int m = 0; m < 10; m++) { neuron_set_type(b->neurons[outputs[m]], motor); }

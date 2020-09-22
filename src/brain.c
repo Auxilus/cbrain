@@ -119,7 +119,7 @@ int neuron_update(struct neuron* n, struct brain* b)
 			b->neurons[n->links[i]]->nextstate += n->wts[i];
 		}
 		n->fired = 1;
-		n->thisstate = 0;
+		n->thisstate = REFACT;
 		n->nextstate = 0;
 		n->n_fired += 1;
 	} else {
