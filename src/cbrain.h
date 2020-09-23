@@ -43,6 +43,7 @@ SOFTWARE.
 #define WEIGHT_MAX 20
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 400
+#define E 2.71828182
 
 #define RADTODEG 57.2957
 
@@ -55,9 +56,12 @@ pthread_mutex_t lock;
 struct neuron {
 	int id;
 	int *links;
+	int *incoming;
 	int *wts;
 	uint lc;
 	uint lmax;
+	uint inc;
+	uint inmax;
 	type n_type;
 	fire_type f_type;
 
@@ -127,7 +131,7 @@ int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
 void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
-void show_stat(struct neuron*);
+void neuron_show_stat(struct neuron*);
 
 /*	src/tem.c  */
 void tem_m(struct brain*);

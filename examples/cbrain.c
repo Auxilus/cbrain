@@ -3965,8 +3965,10 @@ int main(int argc, char* argv[])
 	neuron_link(b->neurons[VD9], b->neurons[MVR18], -7);
 	neuron_link(b->neurons[VD9], b->neurons[PDER], 1);
 	neuron_link(b->neurons[VD9], b->neurons[VD10], 5);
+
 	struct sdlctx* ctx = render_init();
 	struct entityctx* ec = render_spawn(300, 347, 347, 395);
+
 	for (;;) {
 		// check for collision
 		int collision = 0;

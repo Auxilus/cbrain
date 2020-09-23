@@ -1,47 +1,39 @@
 #include "../src/cbrain.h"
-#include "defs.h"
 #include <unistd.h>
 
 int main(int argc, char* argv[])
 {
     srand((unsigned int)time(NULL));
 	float state_decay = rand_float(0.1, 0.5);
-	struct brain* b = brain_init(200, state_decay);
+	struct brain* b = brain_init(8, state_decay);
+
 	printf("-------------------\n");
 	printf("building connectome\n");
 	printf("using state decay %f\n", state_decay);
 	printf("-------------------\n");
 
-    int inputs[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    int outputs[10] = { 190, 191, 192, 193, 194, 195, 196, 197, 198, 199 };
+    neuron_set_type(b->neurons[0], sensory);
+    neuron_set_type(b->neurons[1], sensory);
+    neuron_set_type(b->neurons[2], intermediate);
+    neuron_set_type(b->neurons[3], intermediate);
+    neuron_set_type(b->neurons[4], intermediate);
+    neuron_set_type(b->neurons[5], intermediate);
+    neuron_set_type(b->neurons[6], intermediate);
+    neuron_set_type(b->neurons[5], motor);
 
-    for (int n = 0; n < 10; n++) { neuron_set_type(b->neurons[inputs[n]], sensory); }
-    for (int m = 0; m < 10; m++) { neuron_set_type(b->neurons[outputs[m]], motor); }
-    
-    for (int i = 0; i < 190; i++) {
-        for(int j = 0; j < 10; j++) {
-            int target = rand_int(11, b->nc-1);
-            while (target == i) {
-                target = rand_int(11, b->nc-1);
-            }
-            neuron_link(b->neurons[i], b->neurons[target], rand_int(1, THRESHOLD));
-        }
-    }
+    neuron_link(b->neurons[0], b->neurons[3], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[1], b->neurons[2], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[1], b->neurons[3], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[2], b->neurons[4], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[3], b->neurons[6], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[4], b->neurons[5], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[4], b->neurons[7], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[6], b->neurons[7], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[5], b->neurons[6], rand_float(-THRESHOLD, THRESHOLD));
+    neuron_link(b->neurons[5], b->neurons[2], rand_float(-THRESHOLD, THRESHOLD));
 
-    for (;;) {
-        int max = 0;
-        while (max < 9) {
-            int success = 0;
-            for (int i = 0; i < 10; i++) {
-                neuron_fire(b->neurons[inputs[i]]);
-                neuron_update_range(0, 199, b);
-                if (b->neurons[outputs[i]]->fired) { success += 1; }
-            }
-            printf("success: %f\n", (float)success / (float)10);
-            if (success > max) { max = success; }
-            brain_reset(b);
-            tem_m(b);
-        }
-    }
+    int i1[4] = { 0, 0, 1, 1 };
+    int i2[4] = { 0, 1, 0, 1 };
+    int op[4] = { 0, 1, 1, 1 };
 
 }

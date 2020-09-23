@@ -153,9 +153,9 @@ void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b
 				// int shade = 255 - (255 * b->neurons[i]->thisstate / THRESHOLD);
 				// SDL_SetRenderDrawColor(ctx->ren, shade, shade, shade, 255);
 				SDL_SetRenderDrawColor(ctx->ren, 150, 150, 150, 255);
-				if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
-					printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
-				}
+				//if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
+				//	printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+				//}
 			}
 		}
 	}

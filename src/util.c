@@ -105,7 +105,7 @@ struct brain* gen_brain(char* filename)
 	}
 	if (ret == 1) {
 		for (int i = 0; i < ret_b->nc - 1; i++) {
-			show_stat(ret_b->neurons[i]);
+			neuron_show_stat(ret_b->neurons[i]);
 		}
 		return ret_b;
 	}

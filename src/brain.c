@@ -29,8 +29,11 @@ struct neuron* neuron_init(uint id, float decay)
 	n->id = id;
 	n->lc = 0;
 	n->lmax = 20;
-	n->links = (int*)malloc(4 * 20); /* sizeof(int) * n->lmax */
-	n->wts = (int*)malloc(4 * 20);   /* |----4----| * |-100-| */
+	n->inc = 0;
+	n->inmax = 20;
+	n->links = (int*)malloc(4 * n->lmax);
+	n->incoming = (int*)malloc(4 * n->inmax);
+	n->wts = (int*)malloc(4 * n->lmax);
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
 	n->state_decay = decay;
@@ -58,9 +61,20 @@ void neuron_link(struct neuron* src, struct neuron* n, int wt)
 			src->links = (int*)realloc(src->links, sizeof(int) * src->lmax);
 			src->wts = (int*)realloc(src->wts, sizeof(int) * src->lmax);
 		}
+
+		// reallocate incoming
+		if ((n->inc + 1) > n->inmax) {
+			n->inmax *= 2;
+			cbrain_print(2, "reallocating memory for incoming [id: %u]\n", n->id);
+			n->incoming = (int*)realloc(n->incoming, sizeof(int) * n->inmax);
+		}
+
 		src->links[src->lc] = n->id;
 		src->wts[src->lc] = wt;
 		src->lc += 1;
+		// hold ref. of src neuron in linked neuron
+		n->incoming[n->inc] = src->id;
+		n->inc += 1;
 	}
 }
 
@@ -119,14 +133,14 @@ int neuron_update(struct neuron* n, struct brain* b)
 			b->neurons[n->links[i]]->nextstate += n->wts[i];
 		}
 		n->fired = 1;
-		n->thisstate = REFACT;
+		n->thisstate = 0;
 		n->nextstate = 0;
 		n->n_fired += 1;
 	} else {
 		n->thisstate += n->nextstate;
 
 		// thisstate decay if next state is zero
-		if (n->nextstate == 0 && n->thisstate > n->state_decay && n->fired == 0) {
+		if (n->nextstate == 0 && n->thisstate > 0.0 && n->fired == 0) {
 			// make sure thisstate completely decays
 			n->thisstate -= ((n->thisstate - n->state_decay) < n->state_decay) ? n->thisstate : n->state_decay;
 			cbrain_print(4, "[%d] decay %f\n", n->id, n->thisstate);
@@ -222,11 +236,15 @@ void brain_neuron_type(struct brain* b, type t)
 	}
 }
 
-void show_stat(struct neuron* n)
+void neuron_show_stat(struct neuron* n)
 {
 	cbrain_print(0, "ID: %d  thisstate: %f  nextstate: %f", n->id, n->thisstate, n->nextstate);
 	for (int i = 0; i < n->lc; i++) {
 		cbrain_print(0, "%u:%u ", n->links[i], n->wts[i]);
+	}
+	cbrain_print(0, "\n");
+	for (int i = 0; i < n->inc; i++) {
+		cbrain_print(0, "%u ", n->incoming[i]);
 	}
 	cbrain_print(0, "\n");
 }
