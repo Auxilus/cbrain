@@ -1,10 +1,9 @@
 #!/bin/bash
 
 cd ..
-make uninstall
-make clean
-make -j15 install
+make -j15
+cp libcbrain.so examples
 cd examples
-gcc cbrain.c -o cbrain -lSDL2 -lcbrain
+gcc cbrain.c -o cbrain -lSDL2 -Wl,-rpath=. -L. -lcbrain
 echo
 ./cbrain
