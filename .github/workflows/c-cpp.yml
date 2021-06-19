@@ -20,5 +20,4 @@ jobs:
     - name: check size
       run: ls -alh libcbrain.so
     - name: build example
-      run: cd examples
-      run: bash celegans.sh
+      run: cd examples; bash celegans.sh
