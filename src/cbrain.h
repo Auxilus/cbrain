@@ -31,6 +31,7 @@ SOFTWARE.
 #include <math.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "img.h"
 
 /* control constants */
 #define DEBUG 0
@@ -78,6 +79,9 @@ struct brain {
 	float state_decay;
 	float fitness;
 	struct neuron** neurons;
+	pixel image[IMAGE_HEIGHT][IMAGE_WIDTH];
+	int iteration;
+	int active;
 } brain;
 
 struct nthread {
