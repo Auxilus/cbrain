@@ -216,8 +216,8 @@ struct entityctx* render_spawn(int mls, int mrs, int mle, int mre)
 	ec->x = 300;
 	ec->y = 200;
 	ec->rot = 0.0f;
-	ec->width = 40;
-	ec->height = 20;
+	ec->width = 30;
+	ec->height = 10;
 	ec->mlstart = mls;
 	ec->mrstart = mrs;
 	ec->mlend = mle;

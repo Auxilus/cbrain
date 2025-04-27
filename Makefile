@@ -1,7 +1,7 @@
 C_SOURCES = $(wildcard src/*.c)
 HEADERS   = $(wildcard src/*.h)
 OBJ = ${C_SOURCES:.c=.o}
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -O3 -fcommon
 CC=gcc
 
 all: libcbrain.so
@@ -14,10 +14,10 @@ libcbrain.so: ${OBJ}
 	strip -S --strip-unneeded --remove-section=.note.gnu.gold-version --remove-section=.comment --remove-section=.note --remove-section=.note.gnu.build-id --remove-section=.note.ABI-tag $@
 
 clean:
-	rm src/*.o
-	rm examples/libcbrain.so
-	rm examples/tem_test
-	rm examples/cbrain
+	rm -f src/*.o
+	rm -f examples/libcbrain.so
+	rm -f examples/tem_test
+	rm -f examples/cbrain
 
 install: libcbrain.so
 	install -m 777 $^ ${PREFIX}/lib/
