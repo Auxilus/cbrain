@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "cbrain.h"
 
+pthread_mutex_t lock;
+
 /* initialize new neuron */
 struct neuron* neuron_init(uint id, float decay)
 {
@@ -37,10 +39,11 @@ struct neuron* neuron_init(uint id, float decay)
 	n->thisstate = 0.0;
 	n->nextstate = 0.0;
 	n->state_decay = decay;
-	n->fired = 0;
-	n->n_fired = 0;
-	n->n_type = undefined;
-	return n;
+        n->fired = 0;
+        n->n_fired = 0;
+        n->n_type = undefined;
+        n->last_fired = -STDP_WINDOW;
+        return n;
 }
 
 /* link neuron 'n' to neuron 'src' with given weight 'wt' */
@@ -111,10 +114,37 @@ void neuron_unlink(struct neuron* src, struct neuron* n)
 /* accumulate passed weight to neuron's nextstate */
 void neuron_accum(struct neuron* n, uint wt)
 {
-	cbrain_print(2, "accumulating neuron %d with weight %d\n", n->id, wt);
-	pthread_mutex_lock(&lock);
-	n->nextstate += wt;
-	pthread_mutex_unlock(&lock);
+        cbrain_print(2, "accumulating neuron %d with weight %d\n", n->id, wt);
+        pthread_mutex_lock(&lock);
+        n->nextstate += wt;
+        pthread_mutex_unlock(&lock);
+}
+
+void neuron_stdp(struct brain* b, struct neuron* n)
+{
+        /* potentiation for recently active presynaptic neurons */
+        for (int i = 0; i < n->inc; i++) {
+                int pre_id = n->incoming[i];
+                struct neuron* pre = b->neurons[pre_id];
+                int dt = b->step - pre->last_fired;
+                if (dt > 0 && dt <= STDP_WINDOW) {
+                        int idx = checkexist(n->id, pre->links, pre->lc);
+                        if (idx != -1) {
+                                pre->wts[idx] += STDP_INC;
+                                if (pre->wts[idx] > WEIGHT_MAX) pre->wts[idx] = WEIGHT_MAX;
+                        }
+                }
+        }
+
+        /* depression for synapses where postsynaptic neuron fired recently */
+        for (int i = 0; i < n->lc; i++) {
+                struct neuron* post = b->neurons[n->links[i]];
+                int dt = b->step - post->last_fired;
+                if (dt > 0 && dt <= STDP_WINDOW) {
+                        n->wts[i] -= STDP_DEC;
+                        if (n->wts[i] < -WEIGHT_MAX) n->wts[i] = -WEIGHT_MAX;
+                }
+        }
 }
 
 /* check if neuron's thisstate exceeds the threshold,
@@ -126,17 +156,19 @@ int neuron_update(struct neuron* n, struct brain* b)
 	assert(n->id <= (b->nc - 1));
 
 	// fire neuron if thisstate exceeds THRESHOLD
-	if (n->thisstate >= THRESHOLD) {
-		n->f_type = self;
-		for (int i = 0; i < n->lc; i++) {
-			cbrain_print(4, "sending %d from %d to %d\n", n->wts[i], n->id, n->links[i]);
-			b->neurons[n->links[i]]->nextstate += n->wts[i];
-		}
-		n->fired = 1;
-		n->thisstate = 0;
-		n->nextstate = 0;
-		n->n_fired += 1;
-	} else {
+        if (n->thisstate >= THRESHOLD) {
+                n->f_type = self;
+                for (int i = 0; i < n->lc; i++) {
+                        cbrain_print(4, "sending %d from %d to %d\n", n->wts[i], n->id, n->links[i]);
+                        b->neurons[n->links[i]]->nextstate += n->wts[i];
+                }
+                n->fired = 1;
+                n->thisstate = 0;
+                n->nextstate = 0;
+                n->n_fired += 1;
+                neuron_stdp(b, n);
+                n->last_fired = b->step;
+        } else {
 		n->thisstate += n->nextstate;
 
 		// thisstate decay if next state is zero
@@ -154,14 +186,15 @@ int neuron_update(struct neuron* n, struct brain* b)
 
 int neuron_update_range(uint s, uint e, struct brain* b)
 {
-	int nf = 0;
-	for (int i = s; i <= e; i++) {
-		int fired = neuron_update(b->neurons[i], b);
-		if (fired == 1) {
-			nf += 1;
-		}
-	}
-	return nf;
+        int nf = 0;
+        for (int i = s; i <= e; i++) {
+                int fired = neuron_update(b->neurons[i], b);
+                if (fired == 1) {
+                        nf += 1;
+                }
+        }
+        b->step += 1;
+        return nf;
 }
 
 void neuron_set_type(struct neuron* n, type t)
@@ -207,9 +240,10 @@ struct brain* brain_init(int s, float decay)
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * s);
 	b->nc = s;
-	b->nmax = s;
-	b->fitness = 0.0;
-	b->state_decay = decay;
+        b->nmax = s;
+        b->fitness = 0.0;
+        b->state_decay = decay;
+        b->step = 0;
 
 	// make neurons
 	for (int i = 0; i < s; i++) {
@@ -220,11 +254,13 @@ struct brain* brain_init(int s, float decay)
 
 void brain_reset(struct brain* b)
 {
-	for (int i = 0; i < b->nc; i++) {
-		b->neurons[i]->thisstate = 0;
-		b->neurons[i]->nextstate = 0;
-		b->neurons[i]->fired = 0;
-	}
+        for (int i = 0; i < b->nc; i++) {
+                b->neurons[i]->thisstate = 0;
+                b->neurons[i]->nextstate = 0;
+                b->neurons[i]->fired = 0;
+                b->neurons[i]->last_fired = -STDP_WINDOW;
+        }
+        b->step = 0;
 }
 
 void brain_neuron_type(struct brain* b, type t)

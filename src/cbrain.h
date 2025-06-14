@@ -41,6 +41,10 @@ SOFTWARE.
 #define MUTATE_PROB 0.00001
 #define WEIGHT_MIN 1
 #define WEIGHT_MAX 20
+/* STDP parameters */
+#define STDP_WINDOW 5
+#define STDP_INC 1
+#define STDP_DEC 1
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 400
 #define E 2.71828182
@@ -51,9 +55,9 @@ typedef unsigned int uint;
 typedef enum { undefined, sensory, intermediate, motor } type;
 typedef enum { user, self } fire_type;
 
-pthread_mutex_t lock;
+extern pthread_mutex_t lock;
 
-struct neuron {
+typedef struct neuron {
 	int id;
 	int *links;
 	int *incoming;
@@ -68,53 +72,55 @@ struct neuron {
 	float thisstate;
 	float nextstate;
 	float state_decay;
-	uint fired;
-	uint n_fired;
+        uint fired;
+        uint n_fired;
+        int last_fired;
 } neuron;
 
-struct brain {
+typedef struct brain {
 	uint nc;
 	uint nmax;
 	float state_decay;
-	float fitness;
-	struct neuron** neurons;
+        float fitness;
+        struct neuron** neurons;
+        uint step;
 } brain;
 
-struct nthread {
+typedef struct nthread {
 	pthread_t tid;
 	uint s;
 	uint e;
 	uint status;
 } nthread;
 
-struct thread_bank {
+typedef struct thread_bank {
 	uint tc;
 	uint tmax;
 
-	struct nthread** threads;
+        struct nthread** threads;
 } thread_bank;
 
-struct sdlctx {
-	SDL_Window* win;
-	SDL_Renderer* ren;
-	SDL_Event event;
+typedef struct sdlctx {
+        SDL_Window* win;
+        SDL_Renderer* ren;
+        SDL_Event event;
 } sdlctx;
 
-struct vect {
-	float x;
-	float y;
+typedef struct vect {
+        float x;
+        float y;
 } vect;
 
-struct entityctx {
-	int mlstart;
-	int mrstart;
-	int mlend;
-	int mrend;
-	int width;
-	int height;
-	float rot;
-	float x;
-	float y;
+typedef struct entityctx {
+        int mlstart;
+        int mrstart;
+        int mlend;
+        int mrend;
+        int width;
+        int height;
+        float rot;
+        float x;
+        float y;
 } entityctx;
 
 /*	src/brain.c	*/
@@ -129,6 +135,7 @@ void neuron_accum(struct neuron*, uint);
 void neuron_fire(struct neuron*);
 int  neuron_update(struct neuron*, struct brain*);
 int  neuron_update_range(uint, uint, struct brain*);
+void neuron_stdp(struct brain*, struct neuron*);
 void neuron_set_type(struct neuron*, type);
 void neuron_add(struct brain*);
 void neuron_show_stat(struct neuron*);
