@@ -128,9 +128,18 @@ int neuron_update(struct neuron* n, struct brain* b)
 	int image_row = n->id / IMAGE_WIDTH;
 	int image_col = n->id % IMAGE_WIDTH;
 
+	uint64_t state;
+	uint8_t red = (uint8_t)(n->thisstate * 255 / THRESHOLD);
+	uint8_t green = (uint8_t)(n->nextstate * 255 / THRESHOLD);
+	uint8_t blue = (uint8_t)(n->fired * 255);
+	
+	state = (b->iteration << 24) | (red << 16) | (green << 8) | blue;
+	b->states[n->id] = state;
+
 	b->image[image_row][image_col].r = (uint8_t)(n->thisstate * 255 / THRESHOLD);
 	b->image[image_row][image_col].g = (uint8_t)(n->nextstate * 255 / THRESHOLD);
 	b->image[image_row][image_col].b = (uint8_t)(n->fired * 255);
+	
 
 	// fire neuron if thisstate exceeds THRESHOLD
 	if (n->thisstate >= THRESHOLD) {
@@ -170,25 +179,34 @@ int neuron_update_range(uint s, uint e, struct brain* b)
 		}
 	}
 
-	// if (b->active == 1) {
-	// 	char filename[12];
-	// 	sprintf(filename, "brain_%d.ppm", b->iteration);
-	// 	FILE *fp = fopen(filename, "wb");
-	// 	if (fp == NULL) {
-	// 		fprintf(stderr, "Error opening file for writing\n");
-	// 		exit(1);
-	// 	}
+	// if (1 == 1) {
+		// char filename[12];
+		// sprintf(filename, "brain_%d.ppm", b->iteration);
+		// FILE *fp = fopen(filename, "wb");
+		// if (fp == NULL) {
+		// 	fprintf(stderr, "Error opening file for writing\n");
+		// 	exit(1);
+		// }
 	
-	// 	fprintf(fp, "P6\n%d %d\n%d\n", IMAGE_WIDTH, IMAGE_HEIGHT, MAXVAL);
+		// fprintf(fp, "P6\n%d %d\n%d\n", IMAGE_WIDTH, IMAGE_HEIGHT, MAXVAL);
 		
-	// 	for (int i = 0; i < IMAGE_HEIGHT; i++) {
-	// 		for (int j = 0; j < IMAGE_WIDTH; j++) {
-	// 			fwrite(&b->image[i][j], sizeof(pixel), 1, fp);
-	// 		}
-	// 	}
+		// for (int i = 0; i < IMAGE_HEIGHT; i++) {
+		// 	for (int j = 0; j < IMAGE_WIDTH; j++) {
+
+		// 		printf("%d:%d %d\n", i, j, b->image[i][j].r);
+		// 	}
+		// }
 	
-	// 	fclose(fp);
+		// fclose(fp);
 	// }
+	printf("%d ", b->iteration);
+	for (int i = s; i <= e; i++) {
+		uint8_t red = ((0b11111111 << 16) & b->states[i]) >> 16;
+		uint8_t green = ((0b11111111 << 8) & b->states[i]) >> 8;
+		uint8_t blue = (0b11111111) & b->states[i];
+		printf("%d:%d:%d ", red, green, blue);
+	}
+	printf("\n");
 
 	b->iteration += 1;
 	return nf;
@@ -236,6 +254,7 @@ struct brain* brain_init(int s, float decay)
 {
 	struct brain* b = (struct brain*)malloc(sizeof(struct brain));
 	b->neurons = (struct neuron**)malloc(sizeof(struct neuron) * s);
+	memset(b->states, 0, sizeof(b->states));
 	b->nc = s;
 	b->nmax = s;
 	b->fitness = 0.0;

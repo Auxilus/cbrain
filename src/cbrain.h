@@ -80,6 +80,7 @@ struct brain {
 	float fitness;
 	struct neuron** neurons;
 	pixel image[IMAGE_HEIGHT][IMAGE_WIDTH];
+	uint64_t states[IMAGE_HEIGHT * IMAGE_WIDTH]; // 000........00 00000000 00000000 00000000
 	int iteration;
 	int active;
 } brain;

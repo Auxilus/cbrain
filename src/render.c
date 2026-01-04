@@ -165,9 +165,12 @@ void render_draw_activity(struct sdlctx *ctx, struct entityctx *ec, struct brain
 		int image_row = i / IMAGE_WIDTH;
 		int image_col = i % IMAGE_WIDTH;
 
-		int red = b->image[image_row][image_col].r;
-		int green = b->image[image_row][image_col].g;
-		int blue = b->image[image_row][image_col].b;
+		// int red = b->image[image_row][image_col].r;
+		// int green = b->image[image_row][image_col].g;
+		// int blue = b->image[image_row][image_col].b;
+		int red = ((0b11111111 << 16) & b->states[i]) >> 16;
+		int green = ((0b11111111 << 8) & b->states[i]) >> 8;
+		int blue = (0b11111111) & b->states[i];
 		SDL_SetRenderDrawColor(ctx->ren2, red, green, blue, 255);
 		if (SDL_RenderFillRect(ctx->ren2, &rect) != 0)
 		{
