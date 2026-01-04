@@ -102,6 +102,10 @@ struct sdlctx {
 	SDL_Window* win;
 	SDL_Renderer* ren;
 	SDL_Event event;
+
+	SDL_Window* win2;
+	SDL_Renderer* ren2;
+	SDL_Event event2;
 } sdlctx;
 
 struct vect {
@@ -164,6 +168,7 @@ void render_update(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw_activity_level(struct sdlctx*, struct entityctx*, struct brain*);
 void render_draw_brain(struct sdlctx*, struct entityctx*, struct brain*);
+void render_draw_activity(struct sdlctx*, struct entityctx*, struct brain*);
 void render_cleanup(struct sdlctx*);
 struct entityctx* render_spawn(int, int, int, int);
 #endif

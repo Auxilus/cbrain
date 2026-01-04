@@ -130,7 +130,7 @@ int neuron_update(struct neuron* n, struct brain* b)
 
 	b->image[image_row][image_col].r = (uint8_t)(n->thisstate * 255 / THRESHOLD);
 	b->image[image_row][image_col].g = (uint8_t)(n->nextstate * 255 / THRESHOLD);
-	b->image[image_row][image_col].b = (uint8_t)(n->fired * 255 / THRESHOLD);
+	b->image[image_row][image_col].b = (uint8_t)(n->fired * 255);
 
 	// fire neuron if thisstate exceeds THRESHOLD
 	if (n->thisstate >= THRESHOLD) {
@@ -170,25 +170,25 @@ int neuron_update_range(uint s, uint e, struct brain* b)
 		}
 	}
 
-	if (b->active == 1) {
-		char filename[12];
-		sprintf(filename, "brain_%d.ppm", b->iteration);
-		FILE *fp = fopen(filename, "wb");
-		if (fp == NULL) {
-			fprintf(stderr, "Error opening file for writing\n");
-			exit(1);
-		}
+	// if (b->active == 1) {
+	// 	char filename[12];
+	// 	sprintf(filename, "brain_%d.ppm", b->iteration);
+	// 	FILE *fp = fopen(filename, "wb");
+	// 	if (fp == NULL) {
+	// 		fprintf(stderr, "Error opening file for writing\n");
+	// 		exit(1);
+	// 	}
 	
-		fprintf(fp, "P6\n%d %d\n%d\n", IMAGE_WIDTH, IMAGE_HEIGHT, MAXVAL);
+	// 	fprintf(fp, "P6\n%d %d\n%d\n", IMAGE_WIDTH, IMAGE_HEIGHT, MAXVAL);
 		
-		for (int i = 0; i < IMAGE_HEIGHT; i++) {
-			for (int j = 0; j < IMAGE_WIDTH; j++) {
-				fwrite(&b->image[i][j], sizeof(pixel), 1, fp);
-			}
-		}
+	// 	for (int i = 0; i < IMAGE_HEIGHT; i++) {
+	// 		for (int j = 0; j < IMAGE_WIDTH; j++) {
+	// 			fwrite(&b->image[i][j], sizeof(pixel), 1, fp);
+	// 		}
+	// 	}
 	
-		fclose(fp);
-	}
+	// 	fclose(fp);
+	// }
 
 	b->iteration += 1;
 	return nf;

@@ -22,39 +22,55 @@ SOFTWARE.
 
 int last_max_level = 0;
 
-struct sdlctx* render_init()
+struct sdlctx *render_init()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	{
 		printf("SDL_Init failed: %s\n", SDL_GetError());
 		exit(1);
-	} else {
-		struct sdlctx* ctx = (struct sdlctx*)malloc(sizeof(struct sdlctx));
+	}
+	else
+	{
+		struct sdlctx *ctx = (struct sdlctx *)malloc(sizeof(struct sdlctx));
 		ctx->win = SDL_CreateWindow("cbrain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 		ctx->ren = SDL_CreateRenderer(ctx->win, -1, 0);
+		ctx->win2 = SDL_CreateWindow("brain", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 600, SDL_WINDOW_SHOWN);
+		ctx->ren2 = SDL_CreateRenderer(ctx->win2, -1, 0);
 		return ctx;
 	}
 }
 
-void render_handle_events(struct sdlctx* ctx)
+void render_handle_events(struct sdlctx *ctx)
 {
 	SDL_PollEvent(&ctx->event);
-	switch (ctx->event.type) {
-		case SDL_QUIT:
-			render_cleanup(ctx);
-			break;
+	switch (ctx->event.type)
+	{
+	case SDL_QUIT:
+		render_cleanup(ctx);
+		break;
+	}
+
+	SDL_PollEvent(&ctx->event2);
+	switch (ctx->event2.type)
+	{
+	case SDL_QUIT:
+		render_cleanup(ctx);
+		break;
 	}
 }
 
-void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+void render_update(struct sdlctx *ctx, struct entityctx *ec, struct brain *b)
 {
 	int acc_right = 0;
 	int acc_left = 0;
-	for (int i = ec->mrstart; i < ec->mrend; i++) {
+	for (int i = ec->mrstart; i < ec->mrend; i++)
+	{
 		acc_right += b->neurons[i]->thisstate;
 		b->neurons[i]->thisstate *= 0.7;
 	}
 
-	for (int i = ec->mlstart; i < ec->mlend; i++) {
+	for (int i = ec->mlstart; i < ec->mlend; i++)
+	{
 		int st = b->neurons[i]->thisstate;
 		acc_left += st;
 		b->neurons[i]->thisstate *= 0.7;
@@ -63,12 +79,13 @@ void render_update(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	float speed = acc_right + acc_left;
 	speed = speed / 150.0;
 
-	ec->rot  += (acc_right > acc_left) ? -5.0 : (acc_left > acc_right) ? 5.0 : 0.0;
+	ec->rot += (acc_right > acc_left) ? -5.0 : (acc_left > acc_right) ? 5.0
+																																		: 0.0;
 	ec->x += cosf(ec->rot / RADTODEG) * speed;
 	ec->y += sinf(ec->rot / RADTODEG) * speed;
 }
 
-void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+void render_draw(struct sdlctx *ctx, struct entityctx *ec, struct brain *b)
 {
 	float v1x = 0.0f;
 	float v2x = 0.0f;
@@ -79,7 +96,8 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	float v3y = 0.0f;
 	float v4y = 0.0f;
 
-	if (ec->rot != 0) {
+	if (ec->rot != 0)
+	{
 		float ca = cosf(ec->rot * 3.14159 / 180);
 		float sa = sinf(ec->rot * 3.14159 / 180);
 
@@ -91,15 +109,17 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 		float w = ec->x + ec->width - cx;
 		float h = ec->y + ec->height - cy;
 
-		v1x = x*ca - y*sa + cx;
-		v1y = x*sa + y*ca + cy;
-		v2x = w*ca - y*sa + cx;
-		v2y = w*sa + y*ca + cy;
-		v3x = w*ca - h*sa + cx;
-		v3y = w*sa + h*ca + cy;
-		v4x = x*ca - h*sa + cx;
-		v4y = x*sa + h*ca + cy;
-	} else {
+		v1x = x * ca - y * sa + cx;
+		v1y = x * sa + y * ca + cy;
+		v2x = w * ca - y * sa + cx;
+		v2y = w * sa + y * ca + cy;
+		v3x = w * ca - h * sa + cx;
+		v3y = w * sa + h * ca + cy;
+		v4x = x * ca - h * sa + cx;
+		v4y = x * sa + h * ca + cy;
+	}
+	else
+	{
 		v1x = ec->x - 20;
 		v1y = ec->y - 10;
 		v2x = ec->x + ec->width - 20;
@@ -112,7 +132,10 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 
 	SDL_SetRenderDrawColor(ctx->ren, 255, 255, 255, 255);
 	SDL_RenderClear(ctx->ren);
+	SDL_SetRenderDrawColor(ctx->ren2, 255, 255, 255, 255);
+	SDL_RenderClear(ctx->ren2);
 	render_draw_brain(ctx, ec, b);
+	render_draw_activity(ctx, ec, b);
 	render_draw_activity_level(ctx, ec, b);
 	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 	SDL_RenderDrawLine(ctx->ren, v4x, v4y, v1x, v1y);
@@ -120,11 +143,44 @@ void render_draw(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
 	SDL_RenderDrawLine(ctx->ren, v2x, v2y, v3x, v3y);
 	SDL_RenderDrawLine(ctx->ren, v3x, v3y, v4x, v4y);
 	SDL_RenderPresent(ctx->ren);
+	SDL_RenderPresent(ctx->ren2);
 }
 
-void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+void render_draw_activity(struct sdlctx *ctx, struct entityctx *ec, struct brain *b)
 {
-	for (int i = 0; i < b->nc; i++) {
+	int cols = 32;		// number of columns in the grid
+	int tileSize = 32; // width/height of each cell in pixels
+	for (int i = 0; i < b->nc; i++)
+	{
+
+		int x = i % cols; // column
+		int y = i / cols; // row
+
+		SDL_Rect rect;
+		rect.x = x * tileSize;
+		rect.y = y * tileSize;
+		rect.w = tileSize;
+		rect.h = tileSize;
+
+		int image_row = i / IMAGE_WIDTH;
+		int image_col = i % IMAGE_WIDTH;
+
+		int red = b->image[image_row][image_col].r;
+		int green = b->image[image_row][image_col].g;
+		int blue = b->image[image_row][image_col].b;
+		SDL_SetRenderDrawColor(ctx->ren2, red, green, blue, 255);
+		if (SDL_RenderFillRect(ctx->ren2, &rect) != 0)
+		{
+			printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
+		}
+	}
+	SDL_SetRenderDrawColor(ctx->ren2, 0, 0, 0, 255);
+}
+
+void render_draw_brain(struct sdlctx *ctx, struct entityctx *ec, struct brain *b)
+{
+	for (int i = 0; i < b->nc; i++)
+	{
 		int x = i % 16;
 		int y = i / 16.0;
 		SDL_Rect rect;
@@ -132,37 +188,46 @@ void render_draw_brain(struct sdlctx* ctx, struct entityctx* ec, struct brain* b
 		rect.y = y * 8;
 		rect.w = 8;
 		rect.h = 8;
-		if (b->neurons[i]->fired) {
-			if (b->neurons[i]->f_type == user) {
+		if (b->neurons[i]->fired)
+		{
+			if (b->neurons[i]->f_type == user)
+			{
 				SDL_SetRenderDrawColor(ctx->ren, 223, 155, 109, 255);
-			} else {
+			}
+			else
+			{
 				SDL_SetRenderDrawColor(ctx->ren, 175, 27, 63, 255);
 			}
-			if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
+			if (SDL_RenderFillRect(ctx->ren, &rect) != 0)
+			{
 				printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
 			}
 		}
-		else {
-			if (b->neurons[i]->thisstate == 0) {
+		else
+		{
+			if (b->neurons[i]->thisstate == 0)
+			{
 				SDL_SetRenderDrawColor(ctx->ren, 71, 49, 68, 255);
-				if (SDL_RenderFillRect(ctx->ren, &rect) != 0) {
+				if (SDL_RenderFillRect(ctx->ren, &rect) != 0)
+				{
 					printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
 				}
 			}
-			else {
+			else
+			{
 				// int shade = 255 - (255 * b->neurons[i]->thisstate / THRESHOLD);
 				// SDL_SetRenderDrawColor(ctx->ren, shade, shade, shade, 255);
 				SDL_SetRenderDrawColor(ctx->ren, 150, 150, 150, 255);
-				//if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
+				// if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
 				//	printf("SDL_RenderDrawRect() for %d: %s", i, SDL_GetError());
-				//}
+				// }
 			}
 		}
 	}
 	SDL_SetRenderDrawColor(ctx->ren, 0, 0, 0, 255);
 }
 
-void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct brain* b)
+void render_draw_activity_level(struct sdlctx *ctx, struct entityctx *ec, struct brain *b)
 {
 	int activity_box_height = 16;
 	SDL_Rect rect;
@@ -171,18 +236,22 @@ void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct
 	rect.w = WIN_WIDTH;
 	rect.h = activity_box_height;
 	SDL_SetRenderDrawColor(ctx->ren, 100, 100, 100, 255);
-	if (SDL_RenderDrawRect(ctx->ren, &rect) != 0) {
+	if (SDL_RenderDrawRect(ctx->ren, &rect) != 0)
+	{
 		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
 	}
 
 	int total_fired = 0;
-	for (int i = 0; i < b->nc; i++) {
-		if (b->neurons[i]->fired) {
+	for (int i = 0; i < b->nc; i++)
+	{
+		if (b->neurons[i]->fired)
+		{
 			total_fired++;
 		}
 	}
 
-	if (last_max_level < total_fired) {
+	if (last_max_level < total_fired)
+	{
 		last_max_level = total_fired;
 	}
 
@@ -192,27 +261,29 @@ void render_draw_activity_level(struct sdlctx* ctx, struct entityctx* ec, struct
 	acrect.y = WIN_HEIGHT - activity_box_height;
 	acrect.w = wf;
 	acrect.h = activity_box_height;
-	if (SDL_RenderFillRect(ctx->ren, &acrect) != 0) {
+	if (SDL_RenderFillRect(ctx->ren, &acrect) != 0)
+	{
 		printf("SDL_RenderDrawRect() for activity level: %s", SDL_GetError());
 	}
 
 	SDL_RenderDrawLine(ctx->ren, wf, acrect.y - 4, wf, WIN_HEIGHT);
 	SDL_RenderDrawLine(ctx->ren, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT - activity_box_height, WIN_WIDTH * last_max_level / b->nc, WIN_HEIGHT);
-
 }
 
-void render_cleanup(struct sdlctx* ctx)
+void render_cleanup(struct sdlctx *ctx)
 {
 	printf("Quitting...\n");
 	SDL_DestroyWindow(ctx->win);
 	SDL_DestroyRenderer(ctx->ren);
+	SDL_DestroyWindow(ctx->win2);
+	SDL_DestroyRenderer(ctx->ren2);
 	SDL_Quit();
 	exit(1);
 }
 
-struct entityctx* render_spawn(int mls, int mrs, int mle, int mre)
+struct entityctx *render_spawn(int mls, int mrs, int mle, int mre)
 {
-	struct entityctx* ec = (struct entityctx*)malloc(sizeof(struct entityctx));
+	struct entityctx *ec = (struct entityctx *)malloc(sizeof(struct entityctx));
 	ec->x = 300;
 	ec->y = 200;
 	ec->rot = 0.0f;
